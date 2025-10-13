@@ -17,10 +17,11 @@ export default async function handler(req: Request) {
   }
 
   try {
-    const requestBody = await req.json();
+    // ** FIX: Destructure payload and the new 'stream' flag **
+    const { payload, stream } = await req.json();
 
-    if (!requestBody) {
-      return new Response(JSON.stringify({ error: { message: 'Request body is required' } }), {
+    if (!payload) {
+      return new Response(JSON.stringify({ error: { message: 'Request body payload is required' } }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -31,19 +32,21 @@ export default async function handler(req: Request) {
     if (!API_KEY) {
       throw new Error("API_KEY is not set in the server environment.");
     }
-
-    // *** FIX: Use the streaming endpoint instead of the standard one ***
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?key=${API_KEY}`;
+    
+    // ** FIX: Conditionally choose the correct Gemini endpoint **
+    const endpoint = stream ? 'streamGenerateContent' : 'generateContent';
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:${endpoint}?key=${API_KEY}`;
     
     const geminiResponse = await fetch(GEMINI_API_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestBody),
+        // Send the original payload to Gemini
+        body: JSON.stringify(payload),
     });
 
-    // If Gemini returned an error up-front, handle it immediately.
+    // If Gemini returned an error, handle it.
     if (!geminiResponse.ok) {
        const errorData = await geminiResponse.json();
        return new Response(JSON.stringify(errorData), {
@@ -52,16 +55,23 @@ export default async function handler(req: Request) {
       });
     }
     
-    // ** CRUCIAL FIX **
-    // Instead of waiting for the full JSON, we return the response body directly.
-    // The Edge runtime will automatically stream this body to the client.
-    // This solves the 10-second timeout issue.
-    return new Response(geminiResponse.body, {
-      status: 200,
-      headers: { 
-        'Content-Type': 'text/plain; charset=utf-8',
-      },
-    });
+    // ** FIX: Conditionally return either a stream or a full JSON object **
+    if (stream) {
+      // For streaming requests, return the body directly.
+      return new Response(geminiResponse.body, {
+        status: 200,
+        headers: { 
+          'Content-Type': 'text/plain; charset=utf-8',
+        },
+      });
+    } else {
+      // For non-streaming requests, await the full JSON and return it.
+      const data = await geminiResponse.json();
+      return new Response(JSON.stringify(data), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
 
   } catch (error: any) {
     console.error("Serverless function error:", error);

@@ -13,7 +13,8 @@ const callApiProxy = async (body: object, stream: boolean = false): Promise<any>
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(body),
+    // ** FIX: Send the payload and the stream flag to the intelligent proxy **
+    body: JSON.stringify({ payload: body, stream }),
   });
 
   if (!response.ok) {
@@ -28,7 +29,7 @@ const callApiProxy = async (body: object, stream: boolean = false): Promise<any>
     }
   }
 
-  // --- FIX: Handle streaming vs. non-streaming responses ---
+  // Handle streaming vs. non-streaming responses from our proxy
   if (stream) {
     if (!response.body) {
       throw new Error("Streaming response not available.");
@@ -42,12 +43,13 @@ const callApiProxy = async (body: object, stream: boolean = false): Promise<any>
       if (done) break;
       const chunk = decoder.decode(value);
       
-      // The streaming response sends multiple JSON objects. We need to parse them.
-      // A simple regex can find the text content in each chunk.
       const matches = chunk.matchAll(/"text"\s*:\s*"([^"]*)"/g);
       for (const match of matches) {
-        // The captured group [1] has the actual text. We need to decode JSON string escapes.
-        fullText += JSON.parse(`"${match[1]}"`);
+        try {
+          fullText += JSON.parse(`"${match[1]}"`);
+        } catch (e) {
+          console.error("Failed to parse chunk text:", match[1]);
+        }
       }
     }
     return fullText;
@@ -58,20 +60,36 @@ const callApiProxy = async (body: object, stream: boolean = false): Promise<any>
 };
 
 
-// --- Functions updated to use streaming where appropriate ---
-
 export const analyzeResumes = async (jobDescription: string, resumes: Resume[]): Promise<Candidate[]> => {
   const resumeTexts = resumes.map(r => 
     `--- RESUME START ---\nID: ${r.id}\nFILENAME: ${r.fileName}\n\n${r.text}\n--- RESUME END ---`
   ).join('\n\n');
 
   const prompt = `
-    You are an expert technical recruiter... (Full prompt remains the same)
-    ...
-    You MUST provide the output in a valid JSON array format. Do not include any text or markdown before or after the JSON array. The JSON schema for each object in the array should be:
+    You are an expert technical recruiter and hiring manager with years of experience. Your task is to analyze a list of resumes against a given job description and provide a structured JSON output.
+
+    JOB DESCRIPTION:
+    ${jobDescription}
+
+    RESUMES TO ANALYZE:
+    ${resumeTexts}
+
+    INSTRUCTIONS:
+    1.  Carefully read the Job Description to understand the key requirements, skills, and experience needed.
+    2.  For each resume, perform the following analysis:
+        a.  Identify the candidate's name. If no name is found, use the filename or "Unknown Candidate".
+        b.  Calculate a "matchScore" from 1 to 10, where 1 is a very poor match and 10 is a perfect match. The score should be based on the alignment of the candidate's skills and experience with the job description.
+        c.  Write a concise "justification" (2-3 sentences) explaining the reasoning behind the matchScore.
+        d.  Extract a list of the most relevant "extractedSkills" from the resume that match the job description.
+        e.  Provide a brief "extractedExperienceSummary" (2-3 sentences) summarizing their relevant work history.
+    3.  You MUST provide the output in a valid JSON array format. Do not include any text or markdown formatting before or after the JSON array. The JSON schema for each object in the array should be:
     {
-      "id": "string", "name": "string", "matchScore": "number", "justification": "string", 
-      "extractedSkills": ["string"], "extractedExperienceSummary": "string"
+      "id": "string (use the resume ID from the input)",
+      "name": "string",
+      "matchScore": "number (integer from 1-10)",
+      "justification": "string",
+      "extractedSkills": ["string"],
+      "extractedExperienceSummary": "string"
     }
   `;
 
@@ -84,6 +102,7 @@ export const analyzeResumes = async (jobDescription: string, resumes: Resume[]):
       }
     }, false); // stream = false
     
+    // The Gemini API response for JSON mode is nested.
     const jsonText = response.candidates[0].content.parts[0].text;
     const parsedData: Candidate[] = JSON.parse(jsonText);
     return parsedData;
@@ -97,21 +116,25 @@ export const analyzeResumes = async (jobDescription: string, resumes: Resume[]):
   }
 };
 
-// ** FIX: These functions now use streaming to avoid timeouts **
 export const askQuestionAboutResume = async (
   resumeText: string, 
   question: string, 
   jobDescription: string
 ): Promise<string> => {
   const prompt = `
-    You are an expert career coach... (Full prompt remains the same)
-    ...
+    You are an expert career coach and hiring manager. Your task is to provide insightful answers to questions about a candidate's resume, considering the context of a specific job description. Be helpful, insightful, and constructive. Go beyond what is just written in the resume and provide strategic advice.
+
+    JOB DESCRIPTION CONTEXT:
+    ${jobDescription}
+
+    CANDIDATE'S RESUME:
+    ${resumeText}
+
     USER'S QUESTION:
     ${question}
 
     YOUR INSIGHTFUL ANSWER:
   `;
-  // The returned value is already the full text string from the stream.
   return callApiProxy({ contents: [{ parts: [{ text: prompt }] }] }, true); // stream = true
 };
 
@@ -124,18 +147,42 @@ export const askConsultant = async (
   const conversationHistory = messages.map(msg => `${msg.role}: ${msg.content}`).join('\n');
 
   const prompt = `
-    You are an AI Recruitment Consultant... (Full prompt remains the same)
-    ...
-    Based on all context, provide a helpful answer to the user's last message.
+    You are an AI-powered Career and Recruitment Consultant. You have been provided with the context of a job description, a list of resume filenames that have been uploaded, and the current conversation history. Your goal is to provide expert advice.
+
+    CONTEXT:
+    - Job Description: ${jobDescription || 'Not provided yet.'}
+    - Resumes Uploaded: ${resumeFileNames}
+    - Conversation History:
+    ${conversationHistory}
+
+    Based on all available context, provide a helpful and concise answer to the user's last message. Do not repeat the context in your answer.
   `;
   return callApiProxy({ contents: [{ parts: [{ text: prompt }] }] }, true); // stream = true
 };
 
 export const generateResumeFromDetails = async (data: ResumeBuilderData): Promise<string> => {
+  const experienceSection = data.workExperience
+    .map(exp => `Company: ${exp.company}\nJob Title: ${exp.jobTitle}\nDates: ${exp.startDate} - ${exp.endDate}\nResponsibilities:\n${exp.responsibilities}`)
+    .join('\n\n');
+  
+  const educationSection = data.education
+    .map(edu => `School: ${edu.school}\nDegree: ${edu.degree}\nDates: ${edu.startDate} - ${edu.endDate}`)
+    .join('\n\n');
+
   const prompt = `
-    You are a professional resume writer... (Full prompt remains the same)
-    ...
-    Generate the complete resume text based on the data above. Ensure clean formatting. Do not include any introductory text. Just provide the resume content itself.
+    You are a professional resume writer. Your task is to generate a complete, well-formatted resume in plain text based on the structured data provided by a user. Use strong action verbs and a professional tone.
+
+    USER DATA:
+    - Full Name: ${data.fullName}
+    - Email: ${data.email}
+    - Phone Number: ${data.phoneNumber}
+    - Address: ${data.address}
+    - Professional Summary: ${data.summary}
+    - Work Experience:\n${experienceSection}
+    - Education:\n${educationSection}
+    - Skills: ${data.skills}
+
+    Generate the complete resume text based on the data above. Ensure clean formatting with clear headings (e.g., SUMMARY, WORK EXPERIENCE, EDUCATION, SKILLS). Do not include any introductory or concluding text. Just provide the resume content itself.
   `;
   return callApiProxy({ contents: [{ parts: [{ text: prompt }] }] }, true); // stream = true
 };
