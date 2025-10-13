@@ -16,14 +16,16 @@ const callApiProxy = async (body: object): Promise<any> => {
   });
 
   if (!response.ok) {
+    // Read the raw response body as text ONCE. This is the key fix.
+    const errorText = await response.text();
     try {
-      // First, try to parse the error response as JSON, which is the expected format.
-      const errorBody = await response.json();
+      // Then, try to parse that text as JSON.
+      const errorBody = JSON.parse(errorText);
       console.error("API Proxy Error (JSON):", errorBody);
+      // If successful, throw the structured error message.
       throw new Error(errorBody.error?.message || 'An error occurred while communicating with the API.');
     } catch (jsonError) {
-      // If parsing as JSON fails, the error was likely plain text or HTML.
-      const errorText = await response.text();
+      // If parsing fails, the error was plain text.
       console.error("API Proxy Error (Text):", errorText);
       // Throw the plain text error to be displayed in the UI.
       throw new Error(errorText || 'An unknown HTTP error occurred.');
