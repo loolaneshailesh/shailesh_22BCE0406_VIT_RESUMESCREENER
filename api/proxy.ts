@@ -17,7 +17,6 @@ export default async function handler(req: Request) {
   }
 
   try {
-    // Get the request body sent by the frontend
     const requestBody = await req.json();
 
     if (!requestBody) {
@@ -27,19 +26,15 @@ export default async function handler(req: Request) {
       });
     }
 
-    // This is where the magic happens. We get the API key from Vercel's
-    // secure environment variables. It's never exposed to the public.
     const API_KEY = process.env.API_KEY;
 
     if (!API_KEY) {
-      // This error will appear in your Vercel logs, not the user's browser.
       throw new Error("API_KEY is not set in the server environment.");
     }
 
-    // The official Google Gemini API endpoint
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+    // *** FIX: Use the streaming endpoint instead of the standard one ***
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?key=${API_KEY}`;
     
-    // Call the Gemini API with the exact body the frontend sent us.
     const geminiResponse = await fetch(GEMINI_API_URL, {
         method: 'POST',
         headers: {
@@ -48,21 +43,24 @@ export default async function handler(req: Request) {
         body: JSON.stringify(requestBody),
     });
 
-    // **FIX:** Instead of streaming, we wait for the full response from Gemini.
-    const responseData = await geminiResponse.json();
-
-    // If Gemini returned an error, we forward it.
+    // If Gemini returned an error up-front, handle it immediately.
     if (!geminiResponse.ok) {
-       return new Response(JSON.stringify(responseData), {
+       const errorData = await geminiResponse.json();
+       return new Response(JSON.stringify(errorData), {
         status: geminiResponse.status,
         headers: { 'Content-Type': 'application/json' },
       });
     }
     
-    // We send the complete, valid JSON response back to the client.
-    return new Response(JSON.stringify(responseData), {
+    // ** CRUCIAL FIX **
+    // Instead of waiting for the full JSON, we return the response body directly.
+    // The Edge runtime will automatically stream this body to the client.
+    // This solves the 10-second timeout issue.
+    return new Response(geminiResponse.body, {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'text/plain; charset=utf-8',
+      },
     });
 
   } catch (error: any) {
