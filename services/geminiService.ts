@@ -16,11 +16,21 @@ const callApiProxy = async (body: object): Promise<any> => {
   });
 
   if (!response.ok) {
-    const errorBody = await response.json();
-    console.error("API Proxy Error:", errorBody);
-    throw new Error(errorBody.error?.message || 'An error occurred while communicating with the API.');
+    try {
+      // First, try to parse the error response as JSON, which is the expected format.
+      const errorBody = await response.json();
+      console.error("API Proxy Error (JSON):", errorBody);
+      throw new Error(errorBody.error?.message || 'An error occurred while communicating with the API.');
+    } catch (jsonError) {
+      // If parsing as JSON fails, the error was likely plain text or HTML.
+      const errorText = await response.text();
+      console.error("API Proxy Error (Text):", errorText);
+      // Throw the plain text error to be displayed in the UI.
+      throw new Error(errorText || 'An unknown HTTP error occurred.');
+    }
   }
 
+  // If the response is OK, we expect it to be valid JSON.
   return response.json();
 };
 
@@ -75,7 +85,10 @@ export const analyzeResumes = async (jobDescription: string, resumes: Resume[]):
 
   } catch (error) {
     console.error("Failed to analyze resumes:", error);
-    throw new Error("Could not parse the analysis from the AI model. The response was not valid JSON.");
+    if (error instanceof SyntaxError) {
+      throw new Error("Could not parse the analysis from the AI model. The response was not valid JSON.");
+    }
+    throw error; // Re-throw other errors (like from callApiProxy)
   }
 };
 

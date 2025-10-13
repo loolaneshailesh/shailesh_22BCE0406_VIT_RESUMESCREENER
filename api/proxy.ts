@@ -40,7 +40,6 @@ export default async function handler(req: Request) {
     const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
     
     // Call the Gemini API with the exact body the frontend sent us.
-    // This makes our proxy flexible.
     const geminiResponse = await fetch(GEMINI_API_URL, {
         method: 'POST',
         headers: {
@@ -49,10 +48,20 @@ export default async function handler(req: Request) {
         body: JSON.stringify(requestBody),
     });
 
-    // We stream the raw response from the Gemini API directly back to the client.
-    // This is efficient and ensures all data (including errors) is passed through.
-    return new Response(geminiResponse.body, {
-      status: geminiResponse.status,
+    // **FIX:** Instead of streaming, we wait for the full response from Gemini.
+    const responseData = await geminiResponse.json();
+
+    // If Gemini returned an error, we forward it.
+    if (!geminiResponse.ok) {
+       return new Response(JSON.stringify(responseData), {
+        status: geminiResponse.status,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    
+    // We send the complete, valid JSON response back to the client.
+    return new Response(JSON.stringify(responseData), {
+      status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
 
