@@ -250,6 +250,92 @@ Requirements:
 // Add more roles to expand the list
 const additionalRoles = [
   {
+    title: "Mechanical Engineer",
+    description: `We are looking for a creative and analytical Mechanical Engineer to join our dynamic team. You will be responsible for designing, developing, building, and testing mechanical and thermal sensors and devices, including tools, engines, and machines.
+
+Responsibilities:
+- Design and implement cost-effective equipment modifications to help improve safety and reliability.
+- Develop a project specification with colleagues, often including those from other engineering disciplines.
+- Develop, test and evaluate theoretical designs.
+- Discuss and solve complex problems with manufacturing departments, sub-contractors, suppliers and customers.
+- Use research, analytical, conceptual and planning skills, particularly mathematical modelling and computer-aided design.
+
+Requirements:
+- Proven working experience in mechanical engineering.
+- Working experience with product lifecycle management (PLM), finite element analysis (FEA), and computational fluid dynamics (CFD).
+- Hands-on experience with computer-aided engineering (CAE) and computer-aided manufacturing (CAM).
+- Familiarity with 2D or 3D engineering design and manufacturing tools (e.g., AutoCAD, SolidWorks, Inventor).
+- BS degree in Mechanical Engineering.`
+  },
+  {
+    title: "Electrical and Electronic Engineer",
+    description: `We are hiring an Electrical and Electronic Engineer to help us design, develop, and supervise the manufacturing of electrical equipment, such as electric motors, radar and navigation systems, communications systems, or power generation equipment.
+
+Responsibilities:
+- Design, maintain, implement, or improve electrical instruments, facilities, components, equipment products, or systems for industrial, commercial or domestic purposes.
+- Perform a wide range of engineering tasks by operating computer-assisted design (CAD) or engineering software and equipment.
+- Confer with customers, engineers, and others to discuss existing or potential engineering products or projects.
+- Ensure that installation and operations conform to standards and customer requirements by preparing electrical systems specifications, technical drawings or topographical maps.
+
+Requirements:
+- Proven experience as an Electrical Engineer.
+- Hands-on experience using design and calculation software.
+- In-depth understanding of electrical manufacturing processes.
+- BS degree in Electrical or Electronic Engineering.`
+  },
+  {
+    title: "Electronics and Communication Engineer (ECE)",
+    description: `We are seeking an Electronics and Communication Engineer to design, develop, test, and supervise the manufacturing of electronic equipment such as broadcast and communications systems.
+
+Responsibilities:
+- Design electronic components, software, products, or systems for commercial, industrial, medical, military, or scientific applications.
+- Analyze customer needs to determine the requirements, capacity, and cost for developing an electrical system plan.
+- Develop maintenance and testing procedures for electronic components and equipment.
+- Evaluate systems and recommend design modifications or equipment repair.
+- Inspect electronic equipment, instruments, and systems to make sure they meet safety standards and applicable regulations.
+
+Requirements:
+- Proven experience in electronics, telecommunications, or a related field.
+- Familiarity with hardware description languages (HDL) like VHDL or Verilog.
+- Experience with circuit design and simulation software (e.g., SPICE, MATLAB).
+- Strong understanding of signal processing, digital communications, and embedded systems.`
+  },
+  {
+    title: "Civil Engineer",
+    description: `We are looking for an ambitious Civil Engineer to join our team. In this role, you will design, build, and maintain a variety of infrastructure projects in the public and private sector, such as roads, buildings, airports, tunnels, dams, bridges, and systems for water supply and sewage treatment.
+
+Responsibilities:
+- Manage, design, develop, create and maintain small-scale through to large-scale construction projects in a safe, timely and sustainable manner.
+- Conduct on-site investigations and analyze data (maps, reports, tests, drawings and other).
+- Carry out technical and feasibility studies and draw up blueprints that satisfy technical specifications.
+- Assess potential risks, materials and costs.
+- Provide advice and resolve creatively any emerging problems/deficiencies.
+
+Requirements:
+- Proven working experience in civil engineering.
+- Proficiency in site layout, grading, utility design, erosion control, and regulatory approvals.
+- Excellent knowledge of design and visualization software such as AutoCAD, Civil 3D or similar.
+- BS/MA in Civil Engineering.`
+  },
+  {
+    title: "Chemical Engineer",
+    description: `We are seeking a Chemical Engineer to develop and design chemical manufacturing processes. You will be responsible for the implementation of processes to turn raw materials into valuable products, and you will work to optimize these processes for efficiency and safety.
+
+Responsibilities:
+- Develop safety procedures to be employed by workers operating equipment or working in close proximity to ongoing chemical reactions.
+- Design and plan the layout of equipment.
+- Conduct research to develop new and improved chemical manufacturing processes.
+- Develop processes to separate components of liquids and gases or to generate electrical currents using controlled chemical processes.
+- Perform tests and monitor the performance of processes throughout production.
+
+Requirements:
+- Proven work experience as a Chemical Engineer or similar role.
+- Experience in process simulations.
+- Working knowledge of process engineering and process design.
+- Experience with process simulation software (e.g., Aspen, CHEMCAD).
+- BS degree in Chemical Engineering.`
+  },
+  {
     title: "Mobile App Developer (iOS/Android)",
     description: `Seeking a Mobile App Developer to design, develop, and maintain applications for mobile devices. You will be responsible for the full mobile application development lifecycle.
 

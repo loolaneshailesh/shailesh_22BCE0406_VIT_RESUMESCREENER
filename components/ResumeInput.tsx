@@ -21,7 +21,7 @@ const ResumeInput: React.FC<ResumeInputProps> = ({ resumes, onAddResume, onRemov
   return (
     <div className="bg-slate-900/50 backdrop-blur-md border border-slate-700 p-6 rounded-lg">
       <h2 className="text-xl font-bold mb-2 text-slate-200">Candidate Resumes</h2>
-      <p className="text-sm text-slate-400 mb-4">Upload text or PDF files, or paste resume content below.</p>
+      <p className="text-sm text-slate-400 mb-4">Upload text, PDF, or Word files, or paste resume content below.</p>
       
       <div className="flex flex-col sm:flex-row gap-4 mb-4">
         <label className={`w-full flex-1 font-bold py-2 px-4 rounded-lg text-center transition-all duration-300 ${isParsing ? 'bg-slate-700 text-slate-400 cursor-not-allowed' : 'bg-slate-800/50 hover:bg-slate-700 border border-slate-600 text-slate-300 cursor-pointer'}`}>
@@ -31,12 +31,12 @@ const ResumeInput: React.FC<ResumeInputProps> = ({ resumes, onAddResume, onRemov
               Parsing Datapads...
             </span>
           ) : (
-            'Upload Files (.txt, .pdf)'
+            'Upload Files (.txt, .pdf, .docx)'
           )}
           <input 
             type="file" 
             className="hidden" 
-            accept=".txt,.pdf" 
+            accept=".txt,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
             multiple 
             onChange={(e) => onFileChange(e.target.files)}
             disabled={isParsing}
