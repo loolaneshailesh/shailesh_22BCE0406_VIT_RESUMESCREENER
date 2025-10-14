@@ -1,6 +1,11 @@
  AI Career Co-Pilot
 
 The AI Career Co-Pilot is a sophisticated web application designed to streamline and enhance the processes of resume screening and career preparation. It provides a suite of powerful, integrated tools for both recruiters and job seekers, delivered through a clean and responsive user interface.
+# AI Career Co-Pilot
+
+[![Live Demo](https://img.shields.io/badge/Live-Demo-cyan?style=for-the-badge)](https://shailesh-22-bce-0406-vit-resumescre-tawny.vercel.app/)
+
+The AI Career Co-Pilot is a sophisticated web application designed to streamline...
 
 ## Core Features
 
