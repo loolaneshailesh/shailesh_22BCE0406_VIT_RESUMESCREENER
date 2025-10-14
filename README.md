@@ -5,7 +5,6 @@ The AI Career Co-Pilot is a sophisticated web application designed to streamline
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-cyan?style=for-the-badge)](https://shailesh-22-bce-0406-vit-resumescre-tawny.vercel.app/)
 
-The AI Career Co-Pilot is a sophisticated web application designed to streamline...
 
 ## Core Features
 
