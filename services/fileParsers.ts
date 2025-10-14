@@ -1,5 +1,4 @@
 import * as pdfjsLib from 'pdfjs-dist';
-import mammoth from 'mammoth';
 
 // Set up the worker source for pdf.js to ensure it can run in the background.
 // Using a CDN-hosted version of the worker.
@@ -58,34 +57,7 @@ async function parsePdf(file: File): Promise<string> {
 }
 
 /**
- * Parses a DOCX file (.docx) and extracts its text content.
- * @param file The File object to parse.
- * @returns A promise that resolves with the extracted text content of the DOCX.
- */
-async function parseDocx(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            try {
-                const arrayBuffer = e.target?.result as ArrayBuffer;
-                if (!arrayBuffer) {
-                    return reject(new Error('Failed to read DOCX file into buffer.'));
-                }
-                const result = await mammoth.extractRawText({ arrayBuffer });
-                resolve(result.value);
-            } catch (error) {
-                console.error('Error parsing DOCX:', error);
-                reject(new Error('Failed to parse DOCX content. The file might be corrupted.'));
-            }
-        };
-        reader.onerror = () => reject(new Error('Failed to read the DOCX file.'));
-        reader.readAsArrayBuffer(file);
-    });
-}
-
-
-/**
- * Parses a file (txt, pdf, or docx) and returns its text content.
+ * Parses a file (txt or pdf) and returns its text content.
  * @param file The File object to parse.
  * @returns A promise that resolves with the text content.
  * @throws An error if the file type is not supported.
@@ -97,9 +69,7 @@ export async function parseFile(file: File): Promise<string> {
     return parseTxt(file);
   } else if (extension === 'pdf' || file.type === 'application/pdf') {
     return parsePdf(file);
-  } else if (extension === 'docx' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-    return parseDocx(file);
   } else {
-    throw new Error(`Unsupported file type: '${extension}'. Please upload a .txt, .pdf, or .docx file.`);
+    throw new Error(`Unsupported file type: '${extension}'. Please upload a .txt or .pdf file.`);
   }
 }
