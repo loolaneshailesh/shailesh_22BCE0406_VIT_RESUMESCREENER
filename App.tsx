@@ -101,7 +101,7 @@ const App: React.FC = () => {
       addHistoryEntry({ jobDescription, resumes, analysisResults: results });
     } catch (err: any) {
       console.error(err);
-      setError('An error occurred while analyzing the resumes. Please check your API key and try again.');
+      setError(err.message || 'An error occurred while analyzing the resumes. Please check your API key and try again.');
     } finally {
       setIsLoading(false);
     }

@@ -23,14 +23,29 @@ const callApiProxy = async (body: object, stream: boolean = false): Promise<any>
 
   if (!response.ok) {
     const errorText = await response.text();
+    let errorMessage = 'An unknown API error occurred.';
+
+    // Try to parse the error for more details
     try {
       const errorBody = JSON.parse(errorText);
-      console.error("API Proxy Error (JSON):", errorBody);
-      throw new Error(errorBody.error?.message || 'An error occurred while communicating with the API.');
-    } catch (jsonError) {
-      console.error("API Proxy Error (Text):", errorText);
-      throw new Error(errorText || 'An unknown HTTP error occurred.');
+      const specificMessage = errorBody.error?.message;
+      if (specificMessage) {
+        // Check for common, actionable errors
+        if (specificMessage.includes('API key not valid')) {
+          errorMessage = 'Your API key is not valid. Please check your .env file and ensure it is correct.';
+        } else if (specificMessage.includes('permission to access') || specificMessage.includes('billing')) {
+          errorMessage = 'The API key is likely correct, but there is a permission or billing issue with your Google Cloud project. Please ensure the Generative Language API is enabled and billing is active.';
+        } else {
+          errorMessage = specificMessage; // Use the specific message from the API
+        }
+      }
+    } catch (e) {
+      // If parsing fails, the error might be from the proxy or network, not the API
+      errorMessage = errorText || 'Failed to communicate with the API proxy.';
     }
+    
+    console.error("API Proxy Error:", errorText);
+    throw new Error(errorMessage);
   }
 
   // Handle streaming vs. non-streaming responses from our proxy
