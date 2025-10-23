@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { analyzeResumes, askConsultant } from './services/geminiService';
+import React, { useState, useEffect } from 'react';
+import { analyzeResumes, askConsultant, verifyApiKey } from './services/geminiService';
 import { parseFile } from './services/fileParsers';
 import type { Candidate, Resume, HistoryEntry, ConsultantMessage } from './types';
 import { useHistory } from './hooks/useHistory';
@@ -18,6 +18,7 @@ import FallingStarsBackground from './components/FallingStarsBackground';
 import ResumeBuilder from './components/ResumeBuilder';
 
 type ActiveView = 'screener' | 'builder';
+type ApiKeyStatus = 'verifying' | 'valid' | 'invalid' | 'hidden';
 
 const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ActiveView>('screener');
@@ -28,6 +29,10 @@ const App: React.FC = () => {
   const [isParsing, setIsParsing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  // API Key Status State
+  const [apiKeyStatus, setApiKeyStatus] = useState<ApiKeyStatus>('verifying');
+  const [apiKeyError, setApiKeyError] = useState<string | null>(null);
+
   // AI Consultant State
   const [isConsultantModalOpen, setIsConsultantModalOpen] = useState(false);
   const [consultantMessages, setConsultantMessages] = useState<ConsultantMessage[]>([]);
@@ -35,6 +40,20 @@ const App: React.FC = () => {
   const [consultantError, setConsultantError] = useState<string | null>(null);
 
   const { history, addHistoryEntry, removeHistoryEntry, clearHistory } = useHistory();
+
+  useEffect(() => {
+    const checkApiKey = async () => {
+      try {
+        await verifyApiKey();
+        setApiKeyStatus('valid');
+        setTimeout(() => setApiKeyStatus('hidden'), 4000); // Hide after 4 seconds
+      } catch (err: any) {
+        setApiKeyStatus('invalid');
+        setApiKeyError(err.message || 'An unknown error occurred during API key verification.');
+      }
+    };
+    checkApiKey();
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   const handleAddResume = (text: string) => {
     if (text.trim()) {
@@ -136,6 +155,25 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen text-slate-100 font-sans">
+      {apiKeyStatus === 'verifying' && (
+        <div className="bg-yellow-600/80 text-center p-2 text-sm font-semibold animate-pulse sticky top-0 z-50">
+          Verifying API Key connection...
+        </div>
+      )}
+      {apiKeyStatus === 'valid' && (
+        <div className="bg-green-600/80 text-center p-2 text-sm font-semibold sticky top-0 z-50">
+          ✅ API Key connection successful!
+        </div>
+      )}
+      {apiKeyStatus === 'invalid' && (
+        <div className="bg-red-700/80 text-white p-4 text-center sticky top-0 z-50">
+          <h3 className="font-bold text-lg">API Key Connection Failed</h3>
+          <p className="text-sm mt-1">{apiKeyError}</p>
+          <p className="text-xs mt-2">
+            Please check your <strong>.env</strong> file and your <strong>Google Cloud project settings</strong> (API enabled & billing active). You must restart the server after changing the .env file.
+          </p>
+        </div>
+      )}
       <FallingStarsBackground />
       <Header activeView={activeView} setActiveView={setActiveView} />
       <div className="container mx-auto p-4 md:p-8 relative">
