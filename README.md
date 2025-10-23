@@ -1,5 +1,9 @@
 # Smart Resume Screener
 
+## 🌐 Live Demo
+
+You can try the live application here: **[shailesh-22-bce-0406-vit-resumescre.vercel.app](https://shailesh-22-bce-0406-vit-resumescre.vercel.app/)**
+
 An intelligent tool to parse resumes, extract key information, and score candidates against a job description using the Google Gemini API. This project features a resume screener, a resume builder, and an AI-powered recruitment consultant, all wrapped in a sleek, futuristic UI.
 
 ## ✨ Key Features
@@ -50,6 +54,45 @@ This command will launch the application.
     npm run dev
     ```
 2.  Your terminal will display a local URL, usually **`http://localhost:5173`**. Open this URL in your web browser to see the application live!
+
+---
+
+## ⚙️ How It Works: A Technical Deep-Dive
+
+This project uses a modern frontend architecture to deliver a seamless user experience while securely interacting with the powerful Google Gemini API.
+
+### 1. Frontend: React & Vite
+The user interface is a **Single-Page Application (SPA)** built with **React** and **TypeScript**. This provides a fast, responsive, and type-safe foundation. The entire local development environment is powered by **Vite**, which offers a lightning-fast development server and an optimized build process.
+
+### 2. Backend Communication: The Vite Proxy
+A critical aspect of this application is securely handling the Gemini API key. The key is **never exposed to the browser**. This is achieved using Vite's built-in development server proxy, configured in `vite.config.ts`.
+
+- When the frontend makes an API call to a local path like `/api/proxy-pro`, the Vite server intercepts it.
+- It then forwards this request to the actual Google Generative AI endpoint (`https://generativelanguage.googleapis.com/...`).
+- During this forwarding process, it securely attaches the `API_KEY` from your local `.env` file to the request header.
+- This means the browser only ever communicates with your local server, and the secret key remains safe on the server-side.
+
+### 3. Gemini API Integration (`services/geminiService.ts`)
+This file is the brain of the AI integration, orchestrating all calls to the Gemini API. It intelligently uses two different models for different tasks:
+
+-   **`analyzeResumes` (using `gemini-2.5-pro`):**
+    -   This is a non-streaming, high-complexity task. It uses the more powerful `gemini-2.5-pro` model.
+    -   Crucially, it defines a strict `responseSchema`. This instructs the Gemini API to **always return its response in a specific JSON format**. This eliminates guesswork and makes the data processing on the frontend extremely reliable.
+
+-   **`askConsultant`, `askQuestionAboutResume`, `generateResumeFromDetails` (using `gemini-2.5-flash`):**
+    -   These are interactive, conversational tasks where low latency is key. They use the faster and more cost-effective `gemini-2.5-flash` model.
+    -   These functions use **streaming** to deliver the AI's response word-by-word, creating a real-time "typing" effect in the UI.
+
+### 4. End-to-End Data Flow (Resume Screening)
+
+1.  **User Input:** The user provides a job description and uploads resume files (`.pdf` or `.txt`).
+2.  **Client-Side Parsing:** The browser uses the `pdf.js` library (in `services/fileParsers.ts`) to read the files and extract raw text content. No data has been sent to a server yet.
+3.  **API Call:** The user clicks "Engage Hyperdrive". The `App.tsx` component calls the `analyzeResumes` function.
+4.  **Prompt & Proxy:** `geminiService.ts` constructs a detailed prompt containing the job description, all resume texts, and the strict JSON schema. It sends this entire payload to the local `/api/proxy-pro` endpoint.
+5.  **Secure Forwarding:** The Vite server proxies the request, attaching the API key and sending it to the Google Gemini API.
+6.  **AI Processing:** Gemini processes the prompt, performs the analysis, and generates a JSON object that perfectly matches the requested schema.
+7.  **Response:** The JSON response is sent back to the Vite proxy, which forwards it to the frontend application.
+8.  **UI Update:** The frontend receives the structured data, parses it, and updates the state, causing React to render the `CandidateCard` components with the analysis results.
 
 ---
 
