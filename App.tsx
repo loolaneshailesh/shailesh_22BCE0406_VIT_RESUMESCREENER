@@ -31,7 +31,7 @@ const App: React.FC = () => {
 
   // API Key Status State
   const [apiKeyStatus, setApiKeyStatus] = useState<ApiKeyStatus>('verifying');
-  const [apiKeyError, setApiKeyError] = useState<string | null>(null);
+  const [maskedApiKey, setMaskedApiKey] = useState<string | null>(null);
 
   // AI Consultant State
   const [isConsultantModalOpen, setIsConsultantModalOpen] = useState(false);
@@ -42,6 +42,14 @@ const App: React.FC = () => {
   const { history, addHistoryEntry, removeHistoryEntry, clearHistory } = useHistory();
 
   useEffect(() => {
+    // Vite exposes env variables to the client with the `VITE_` prefix
+    const key = import.meta.env.VITE_API_KEY as string;
+    if (key) {
+      // Create a masked version for safe display
+      const masked = `${key.substring(0, 4)}...${key.substring(key.length - 4)}`;
+      setMaskedApiKey(masked);
+    }
+
     const checkApiKey = async () => {
       try {
         await verifyApiKey();
@@ -49,7 +57,6 @@ const App: React.FC = () => {
         setTimeout(() => setApiKeyStatus('hidden'), 4000); // Hide after 4 seconds
       } catch (err: any) {
         setApiKeyStatus('invalid');
-        setApiKeyError(err.message || 'An unknown error occurred during API key verification.');
       }
     };
     checkApiKey();
@@ -118,9 +125,10 @@ const App: React.FC = () => {
       setAnalysisResults(results);
       // Save to history on success
       addHistoryEntry({ jobDescription, resumes, analysisResults: results });
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || 'An error occurred while analyzing the resumes. Please check your API key and try again.');
+    } catch (err: any)      {
+      console.error("Screening Error:", err);
+      // Use a more specific error message from the service if available
+      setError(err.message || 'An error occurred during analysis. Please check the console for details.');
     } finally {
       setIsLoading(false);
     }
@@ -166,11 +174,24 @@ const App: React.FC = () => {
         </div>
       )}
       {apiKeyStatus === 'invalid' && (
-        <div className="bg-red-700/80 text-white p-4 text-center sticky top-0 z-50">
+        <div className="bg-red-700/80 text-white p-4 text-center sticky top-0 z-50 space-y-2">
           <h3 className="font-bold text-lg">API Key Connection Failed</h3>
-          <p className="text-sm mt-1">{apiKeyError}</p>
-          <p className="text-xs mt-2">
-            Please check your <strong>.env</strong> file and your <strong>Google Cloud project settings</strong> (API enabled & billing active). You must restart the server after changing the .env file.
+          
+          {maskedApiKey ? (
+            <p className="text-sm font-mono bg-red-900/50 py-1 px-2 rounded-md inline-block">
+              Attempted to use key: <strong>{maskedApiKey}</strong>
+            </p>
+          ) : (
+            <p className="text-sm font-mono bg-red-900/50 py-1 px-2 rounded-md inline-block">
+              VITE_API_KEY not found in .env file.
+            </p>
+          )}
+
+          <p className="text-sm">
+            This confirms your <strong>.env file is being read correctly</strong>. The issue is with the key itself or your Google Cloud project.
+          </p>
+          <p className="text-xs">
+            Please <strong><a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="underline font-bold">create a new API key</a></strong> and check your <strong><a href="https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com" target="_blank" rel="noopener noreferrer" className="underline font-bold">Google Cloud project settings</a></strong> (API enabled & billing active). Remember to restart the server after changing the .env file.
           </p>
         </div>
       )}
