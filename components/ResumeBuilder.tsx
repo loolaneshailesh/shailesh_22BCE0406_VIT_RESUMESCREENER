@@ -7,7 +7,6 @@ import SparklesIcon from './icons/SparklesIcon';
 import ClipboardIcon from './icons/ClipboardIcon';
 import PlusIcon from './icons/PlusIcon';
 import TrashIcon from './icons/TrashIcon';
-// FIX: Import the ErrorDisplay component to resolve the 'Cannot find name' error.
 import ErrorDisplay from './ErrorDisplay';
 
 const initialFormData: ResumeBuilderData = {

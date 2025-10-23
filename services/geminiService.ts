@@ -1,20 +1,24 @@
 import type { Candidate, Resume, ConsultantMessage, ResumeBuilderData } from "../types";
 
 /**
- * A generic function to call our secure serverless proxy.
+ * A generic function to call our secure Vite server proxy.
  * This is the ONLY function that communicates with the backend.
  * @param body The request body to send to the Gemini API via our proxy.
  * @param stream Whether to handle a streaming response.
  * @returns The JSON response from the Gemini API or the assembled text from a stream.
  */
 const callApiProxy = async (body: object, stream: boolean = false): Promise<any> => {
-  const response = await fetch('/api/proxy', {
+  // Choose the correct local proxy endpoint based on the stream flag.
+  // The Vite dev server will forward these requests to the correct Gemini API endpoint.
+  const proxyUrl = stream ? '/api/proxy-flash' : '/api/proxy-pro';
+
+  const response = await fetch(proxyUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    // ** FIX: Send the payload and the stream flag to the intelligent proxy **
-    body: JSON.stringify({ payload: body, stream }),
+    // The body is sent directly, no need for the { payload, stream } wrapper anymore.
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) {
@@ -59,6 +63,28 @@ const callApiProxy = async (body: object, stream: boolean = false): Promise<any>
   }
 };
 
+// Defines the strict JSON schema for the resume analysis output.
+// This ensures the Gemini API returns data in a consistent and reliable format.
+const candidateSchema = {
+  type: 'ARRAY',
+  items: {
+    type: 'OBJECT',
+    properties: {
+      id: { type: 'STRING', description: 'The resume ID from the input' },
+      name: { type: 'STRING', description: "The candidate's full name" },
+      matchScore: { type: 'INTEGER', description: 'A score from 1 to 10 indicating the match with the job description.' },
+      justification: { type: 'STRING', description: 'A concise (2-3 sentences) justification for the match score.' },
+      extractedSkills: {
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        description: 'A list of key skills extracted from the resume that are relevant to the job description.'
+      },
+      extractedExperienceSummary: { type: 'STRING', description: 'A brief (2-3 sentences) summary of the candidate\'s relevant work experience.' }
+    },
+    required: ['id', 'name', 'matchScore', 'justification', 'extractedSkills', 'extractedExperienceSummary']
+  }
+};
+
 
 export const analyzeResumes = async (jobDescription: string, resumes: Resume[]): Promise<Candidate[]> => {
   const resumeTexts = resumes.map(r => 
@@ -66,7 +92,7 @@ export const analyzeResumes = async (jobDescription: string, resumes: Resume[]):
   ).join('\n\n');
 
   const prompt = `
-    You are an expert technical recruiter and hiring manager with years of experience. Your task is to analyze a list of resumes against a given job description and provide a structured JSON output.
+    You are an expert technical recruiter. Your task is to analyze a list of resumes against a given job description and provide a structured JSON output based on the provided schema.
 
     JOB DESCRIPTION:
     ${jobDescription}
@@ -75,22 +101,14 @@ export const analyzeResumes = async (jobDescription: string, resumes: Resume[]):
     ${resumeTexts}
 
     INSTRUCTIONS:
-    1.  Carefully read the Job Description to understand the key requirements, skills, and experience needed.
-    2.  For each resume, perform the following analysis:
-        a.  Identify the candidate's name. If no name is found, use the filename or "Unknown Candidate".
-        b.  Calculate a "matchScore" from 1 to 10, where 1 is a very poor match and 10 is a perfect match. The score should be based on the alignment of the candidate's skills and experience with the job description.
-        c.  Write a concise "justification" (2-3 sentences) explaining the reasoning behind the matchScore.
-        d.  Extract a list of the most relevant "extractedSkills" from the resume that match the job description.
-        e.  Provide a brief "extractedExperienceSummary" (2-3 sentences) summarizing their relevant work history.
-    3.  You MUST provide the output in a valid JSON array format. Do not include any text or markdown formatting before or after the JSON array. The JSON schema for each object in the array should be:
-    {
-      "id": "string (use the resume ID from the input)",
-      "name": "string",
-      "matchScore": "number (integer from 1-10)",
-      "justification": "string",
-      "extractedSkills": ["string"],
-      "extractedExperienceSummary": "string"
-    }
+    1. Read the job description to understand key requirements.
+    2. For each resume, provide:
+        a. The candidate's name. Use the filename or "Unknown Candidate" if not found.
+        b. A "matchScore" from 1 to 10 based on how well the candidate's skills and experience align with the job description.
+        c. A concise "justification" (2-3 sentences) for the score.
+        d. A list of "extractedSkills" from the resume relevant to the job.
+        e. A brief "extractedExperienceSummary" (2-3 sentences) of their relevant work history.
+    3. Your output MUST conform to the JSON schema provided in the request.
   `;
 
   try {
@@ -99,6 +117,7 @@ export const analyzeResumes = async (jobDescription: string, resumes: Resume[]):
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: {
         responseMimeType: "application/json",
+        responseSchema: candidateSchema,
       }
     }, false); // stream = false
     
