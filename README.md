@@ -69,19 +69,14 @@ A critical aspect of this application is securely handling the Gemini API key. T
 
 - When the frontend makes an API call to a local path like `/api/proxy-pro`, the Vite server intercepts it.
 - It then forwards this request to the actual Google Generative AI endpoint (`https://generativelanguage.googleapis.com/...`).
-- During this forwarding process, it securely attaches the `API_KEY` from your local `.env` file to the request header.
+- During this forwarding process, it securely attaches the `API_KEY` from your local `.env` file to the request.
 - This means the browser only ever communicates with your local server, and the secret key remains safe on the server-side.
 
 ### 3. Gemini API Integration (`services/geminiService.ts`)
-This file is the brain of the AI integration, orchestrating all calls to the Gemini API. It intelligently uses two different models for different tasks:
+This file is the brain of the AI integration, orchestrating all calls to the Gemini API. To simplify the architecture and **allow the project to be run with a free-tier API key without a billing account**, it now uses the versatile `gemini-2.5-flash` model for all tasks.
 
--   **`analyzeResumes` (using `gemini-2.5-pro`):**
-    -   This is a non-streaming, high-complexity task. It uses the more powerful `gemini-2.5-pro` model.
-    -   Crucially, it defines a strict `responseSchema`. This instructs the Gemini API to **always return its response in a specific JSON format**. This eliminates guesswork and makes the data processing on the frontend extremely reliable.
-
--   **`askConsultant`, `askQuestionAboutResume`, `generateResumeFromDetails` (using `gemini-2.5-flash`):**
-    -   These are interactive, conversational tasks where low latency is key. They use the faster and more cost-effective `gemini-2.5-flash` model.
-    -   These functions use **streaming** to deliver the AI's response word-by-word, creating a real-time "typing" effect in the UI.
+-   **`analyzeResumes` (Non-Streaming):** For the complex resume analysis, the app makes a standard request and receives a complete, structured JSON object. This is enabled by Gemini's JSON mode, which ensures reliable data parsing.
+-   **Conversational Features (Streaming):** For interactive features like the AI Consultant, the app uses streaming to deliver the AI's response word-by-word, creating a real-time "typing" effect in the UI.
 
 ### 4. End-to-End Data Flow (Resume Screening)
 

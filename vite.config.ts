@@ -10,9 +10,9 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       proxy: {
-        // Proxy for non-streaming, analysis requests using the powerful model
+        // Proxy for non-streaming, analysis requests now uses the flash model
         '/api/proxy-pro': {
-          target: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${env.API_KEY}`,
+          target: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${env.API_KEY}`,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api\/proxy-pro/, ''),
         },
