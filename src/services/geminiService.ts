@@ -1,4 +1,8 @@
 import type { Candidate, Resume, ConsultantMessage, ResumeBuilderData } from "../types";
+import { GoogleGenAI, Type } from "@google/genai";
+
+// This file is for the Vite-based development environment.
+// It uses a local proxy to securely handle the API key.
 
 /**
  * A generic function to call our secure Vite server proxy.
@@ -17,7 +21,6 @@ const callApiProxy = async (body: object, stream: boolean = false): Promise<any>
     headers: {
       'Content-Type': 'application/json',
     },
-    // The body is sent directly, no need for the { payload, stream } wrapper anymore.
     body: JSON.stringify(body),
   });
 
@@ -25,22 +28,19 @@ const callApiProxy = async (body: object, stream: boolean = false): Promise<any>
     const errorText = await response.text();
     let errorMessage = 'An unknown API error occurred.';
 
-    // Try to parse the error for more details
     try {
       const errorBody = JSON.parse(errorText);
       const specificMessage = errorBody.error?.message;
       if (specificMessage) {
-        // Check for common, actionable errors
         if (specificMessage.includes('API key not valid')) {
-          errorMessage = 'Your API key is not valid. Please check your .env file and ensure it is correct.';
+          errorMessage = 'Your API key is not valid. Please check your setup.';
         } else if (specificMessage.includes('permission to access') || specificMessage.includes('billing')) {
           errorMessage = 'The API key is likely correct, but there is a permission or billing issue with your Google Cloud project. Please ensure the Generative Language API is enabled and billing is active.';
         } else {
-          errorMessage = specificMessage; // Use the specific message from the API
+          errorMessage = specificMessage;
         }
       }
     } catch (e) {
-      // If parsing fails, the error might be from the proxy or network, not the API
       errorMessage = errorText || 'Failed to communicate with the API proxy.';
     }
     
@@ -48,7 +48,6 @@ const callApiProxy = async (body: object, stream: boolean = false): Promise<any>
     throw new Error(errorMessage);
   }
 
-  // Handle streaming vs. non-streaming responses from our proxy
   if (stream) {
     if (!response.body) {
       throw new Error("Streaming response not available.");
@@ -73,31 +72,10 @@ const callApiProxy = async (body: object, stream: boolean = false): Promise<any>
     }
     return fullText;
   } else {
-    // If not streaming, we expect a single JSON object.
     return response.json();
   }
 };
 
-/**
- * Verifies the API key by making a simple, non-streaming request to the Gemini API.
- * This is used for a startup check to provide immediate user feedback.
- * Throws an error if the key is invalid or the connection fails.
- */
-export const verifyApiKey = async (): Promise<void> => {
-  try {
-    // We use a simple, low-cost prompt just to test connectivity.
-    // We don't care about the response, only that the request doesn't fail.
-    await callApiProxy({
-      contents: [{ parts: [{ text: "hello" }] }],
-    }, false); // stream = false
-  } catch (error) {
-    // Re-throw the detailed error from callApiProxy to be displayed in the UI
-    throw error;
-  }
-};
-
-// Defines the strict JSON schema for the resume analysis output.
-// This ensures the Gemini API returns data in a consistent and reliable format.
 const candidateSchema = {
   type: 'ARRAY',
   items: {
@@ -145,16 +123,14 @@ export const analyzeResumes = async (jobDescription: string, resumes: Resume[]):
   `;
 
   try {
-    // This function requires a full JSON object, so it does NOT stream.
     const response = await callApiProxy({
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: {
         responseMimeType: "application/json",
         responseSchema: candidateSchema,
       }
-    }, false); // stream = false
+    }, false);
     
-    // The Gemini API response for JSON mode is nested.
     const jsonText = response.candidates[0].content.parts[0].text;
     const parsedData: Candidate[] = JSON.parse(jsonText);
     return parsedData;
@@ -187,7 +163,7 @@ export const askQuestionAboutResume = async (
 
     YOUR INSIGHTFUL ANSWER:
   `;
-  return callApiProxy({ contents: [{ parts: [{ text: prompt }] }] }, true); // stream = true
+  return callApiProxy({ contents: [{ parts: [{ text: prompt }] }] }, true);
 };
 
 export const askConsultant = async (
@@ -209,7 +185,7 @@ export const askConsultant = async (
 
     Based on all available context, provide a helpful and concise answer to the user's last message. Do not repeat the context in your answer.
   `;
-  return callApiProxy({ contents: [{ parts: [{ text: prompt }] }] }, true); // stream = true
+  return callApiProxy({ contents: [{ parts: [{ text: prompt }] }] }, true);
 };
 
 export const generateResumeFromDetails = async (data: ResumeBuilderData): Promise<string> => {
@@ -236,5 +212,5 @@ export const generateResumeFromDetails = async (data: ResumeBuilderData): Promis
 
     Generate the complete resume text based on the data above. Ensure clean formatting with clear headings (e.g., SUMMARY, WORK EXPERIENCE, EDUCATION, SKILLS). Do not include any introductory or concluding text. Just provide the resume content itself.
   `;
-  return callApiProxy({ contents: [{ parts: [{ text: prompt }] }] }, true); // stream = true
+  return callApiProxy({ contents: [{ parts: [{ text: prompt }] }] }, true);
 };
