@@ -33,7 +33,7 @@ const callApiProxy = async (body: object, stream: boolean = false): Promise<any>
       const specificMessage = errorBody.error?.message;
       if (specificMessage) {
         if (specificMessage.includes('API key not valid')) {
-          errorMessage = 'Your API key is not valid. Please check your setup.';
+          errorMessage = 'Your API key is not valid.';
         } else if (specificMessage.includes('permission to access') || specificMessage.includes('billing')) {
           errorMessage = 'The API key is likely correct, but there is a permission or billing issue with your Google Cloud project. Please ensure the Generative Language API is enabled and billing is active.';
         } else {
