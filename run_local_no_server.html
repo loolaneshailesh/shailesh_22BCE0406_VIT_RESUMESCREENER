@@ -196,10 +196,63 @@
 
       // --- DATA: presetRoles.js ---
       const PRESET_ROLES = [
-        { title: "Backend Developer", description: "We are seeking an experienced Backend Developer to join our IT team. You will be responsible for the server-side of our web applications. If you have excellent programming skills and a passion for developing applications or improving existing ones, we would like to meet you.\n\nResponsibilities:\n- Participate in the entire application lifecycle, focusing on coding and debugging.\n- Write clean code to develop functional web applications.\n- Troubleshoot and debug applications.\n- Perform UI tests to optimize performance.\n- Manage cutting-edge technologies to improve legacy applications.\n- Collaborate with Frontend developers to integrate user-facing elements with server-side logic.\n- Gather and address technical and design requirements.\n- Provide training and support to internal teams.\n- Build reusable code and libraries for future use.\n- Liaise with developers, designers and system administrators to identify new features.\n\nRequirements:\n- Proven experience as a Backend Developer.\n- In-depth understanding of the entire web development process (design, development and deployment).\n- Hands on experience with programming languages like Java, Ruby, Python, PHP and .Net.\n- Familiarity with front-end languages (e.g. HTML, JavaScript and CSS).\n- Excellent analytical and time management skills." },
-        { title: "Business Analyst", description: "We are looking for a Business Analyst to join our team. The main role of the Business Analyst is to analyze the business processes, identify areas of improvement, and recommend solutions to business problems.\n\nResponsibilities:\n- Elicit, analyze, and document business requirements.\n- Communicate with stakeholders to understand their needs and concerns.\n- Create detailed business analysis, outlining problems, opportunities, and solutions for a business.\n- Bridge the gap between IT and the business using data analytics to assess processes, determine requirements and deliver data-driven recommendations and reports to executives and stakeholders.\n\nRequirements:\n- Proven experience as a Business Analyst.\n- Experience with business process modeling.\n- Strong analytical and problem-solving skills.\n- Excellent communication and interpersonal skills.\n- Familiarity with project management methodologies like Agile and Scrum." },
-        // NOTE: In a real file, all other roles would be included here.
-      ].sort((a, b) => a.title.localeCompare(b.title));
+          { title: "Backend Developer", description: "We are seeking an experienced Backend Developer..." },
+          { title: "Business Analyst", description: "We are looking for a Business Analyst..." },
+          { title: "Cloud Engineer", description: "We are seeking a skilled Cloud Engineer..." },
+          { title: "Content Strategist", description: "We are looking for a Content Strategist..." },
+          { title: "Customer Support Representative", description: "We are looking for a Customer-oriented Service Representative..." },
+          { title: "Cybersecurity Analyst", description: "We are seeking a Cybersecurity Analyst..." },
+          { title: "Data Scientist", description: "We are looking for a Data Scientist..." },
+          { title: "Database Administrator (DBA)", description: "We are looking for a skilled Database Administrator..." },
+          { title: "DevOps Engineer", description: "We are looking for a DevOps Engineer..." },
+          { title: "Digital Marketing Specialist", description: "We are looking for a Digital Marketing Specialist..." },
+          { title: "Financial Analyst", description: "We are looking for a Financial Analyst..." },
+          { title: "Frontend Developer", description: "We are looking for a skilled Frontend Developer..." },
+          { title: "Full-Stack Developer", description: "We are looking for a Full-Stack Developer..." },
+          { title: "Graphic Designer", description: "We are looking for a creative Graphic Designer..." },
+          { title: "Human Resources (HR) Manager", description: "We are looking for an HR Manager..." },
+          { title: "IT Support Specialist", description: "We are seeking an IT Support Specialist..." },
+          { title: "Marketing Manager", description: "We are looking for a Marketing Manager..." },
+          { title: "Mobile App Developer (iOS/Android)", description: "Seeking a Mobile App Developer..." },
+          { title: "Network Engineer", description: "We are looking for a Network Engineer..." },
+          { title: "Product Manager", description: "We are looking for an experienced Product Manager..." },
+          { title: "Project Manager", description: "We are looking for an experienced Project Manager..." },
+          { title: "Software Engineer in Test (SDET)", description: "We are looking for a Software Development Engineer in Test..." },
+          { title: "Systems Administrator", description: "We are looking for a System Administrator..." },
+          { title: "UX/UI Designer", description: "We are looking for a talented UX/UI Designer..." }
+      ].map(role => ({
+          ...role,
+          description: role.description.replace(/\.{3,}/, (match) => {
+              const fullDescriptions = {
+                  "Backend Developer": `We are seeking an experienced Backend Developer to join our IT team. You will be responsible for the server-side of our web applications. If you have excellent programming skills and a passion for developing applications or improving existing ones, we would like to meet you.\n\nResponsibilities:\n- Participate in the entire application lifecycle, focusing on coding and debugging.\n- Write clean code to develop functional web applications.\n- Troubleshoot and debug applications.\n- Perform UI tests to optimize performance.\n- Manage cutting-edge technologies to improve legacy applications.\n- Collaborate with Frontend developers to integrate user-facing elements with server-side logic.\n- Gather and address technical and design requirements.\n- Provide training and support to internal teams.\n- Build reusable code and libraries for future use.\n- Liaise with developers, designers and system administrators to identify new features.\n\nRequirements:\n- Proven experience as a Backend Developer.\n- In-depth understanding of the entire web development process (design, development and deployment).\n- Hands on experience with programming languages like Java, Ruby, Python, PHP and .Net.\n- Familiarity with front-end languages (e.g. HTML, JavaScript and CSS).\n- Excellent analytical and time management skills.`,
+                  "Business Analyst": `We are looking for a Business Analyst to join our team. The main role of the Business Analyst is to analyze the business processes, identify areas of improvement, and recommend solutions to business problems.\n\nResponsibilities:\n- Elicit, analyze, and document business requirements.\n- Communicate with stakeholders to understand their needs and concerns.\n- Create detailed business analysis, outlining problems, opportunities, and solutions for a business.\n- Bridge the gap between IT and the business using data analytics to assess processes, determine requirements and deliver data-driven recommendations and reports to executives and stakeholders.\n\nRequirements:\n- Proven experience as a Business Analyst.\n- Experience with business process modeling.\n- Strong analytical and problem-solving skills.\n- Excellent communication and interpersonal skills.\n- Familiarity with project management methodologies like Agile and Scrum.`,
+                  "Cloud Engineer": `We are seeking a skilled Cloud Engineer to work with our engineering team to develop, implement, optimize, and maintain cloud-based solutions. You will be responsible for deploying and debugging cloud stacks, educating teams on new cloud initiatives, and ensuring the security of the cloud infrastructure.\n\nResponsibilities:\n- Collaborate with engineering and development teams to evaluate and identify optimal cloud solutions.\n- Modify and improve existing systems.\n- Educate teams on the implementation of new cloud-based initiatives, providing associated training as required.\n- Employ exceptional problem-solving skills, with the ability to see and solve issues before they affect business productivity.\n- Design, develop and deploy modular cloud-based systems.\n- Develop and maintain cloud-based solutions in accordance with best practices.\n- Ensure the security of the cloud-based infrastructure.\n\nRequirements:\n- Bachelor's degree in Computer Science, Information Technology, or a related field.\n- Proven experience as a Cloud Engineer or similar role.\n- Experience with cloud platforms (e.g., AWS, Azure, Google Cloud).\n- Knowledge of cloud security, networking, and infrastructure as code (IaC) tools like Terraform or CloudFormation.\n- Experience with containerization technologies, such as Docker and Kubernetes.`,
+                  "Content Strategist": `We are looking for a Content Strategist to oversee all marketing content initiatives to ensure customer engagement, brand consistency and a positive customer experience. You will be responsible for creating and implementing a content strategy that aligns with our business goals.\n\nResponsibilities:\n- Develop a content strategy aligned with short-term and long-term marketing targets.\n- Collaborate with marketing and design teams to plan and develop site content, style, and layout.\n- Create and publish engaging content.\n- Edit, proofread and improve other writers’ posts.\n- Liaise with content writers to ensure brand consistency.\n- Optimize content according to SEO.\n- Use content management systems to analyze website traffic and user engagement metrics.\n\nRequirements:\n- Proven work experience as a Content Strategist, Content Manager or similar role.\n- Portfolio of published articles.\n- Experience with content management systems (e.g., WordPress).\n- Knowledge of SEO and web traffic metrics.\n- Excellent writing and editing skills in English.`,
+                  "Customer Support Representative": `We are looking for a Customer-oriented Service Representative. A customer service representative, or CSR, will act as a liaison, provide product/services information and resolve any emerging problems that our customer accounts might face with accuracy and efficiency.\n\nResponsibilities:\n- Manage large amounts of incoming calls.\n- Generate sales leads.\n- Identify and assess customers’ needs to achieve satisfaction.\n- Build sustainable relationships and trust with customer accounts through open and interactive communication.\n- Provide accurate, valid and complete information by using the right methods/tools.\n- Handle customer complaints, provide appropriate solutions and alternatives within the time limits; follow up to ensure resolution.\n\nRequirements:\n- Proven customer support experience or experience as a client service representative.\n- Strong phone contact handling skills and active listening.\n- Familiarity with CRM systems and practices.\n- Customer orientation and ability to adapt/respond to different types of characters.\n- Excellent communication and presentation skills.`,
+                  "Cybersecurity Analyst": `We are seeking a Cybersecurity Analyst to protect our computer networks and systems. You will be responsible for identifying and mitigating security threats, implementing security measures, and responding to security incidents.\n\nResponsibilities:\n- Monitor computer networks for security issues.\n- Investigate security breaches and other cybersecurity incidents.\n- Install security measures and operate software to protect systems and information infrastructure, including firewalls and data encryption programs.\n- Document security breaches and assess the damage they cause.\n- Work with the security team to perform tests and uncover network vulnerabilities.\n- Fix detected vulnerabilities to maintain a high-security standard.\n\nRequirements:\n- Proven experience as a Cybersecurity Analyst or similar role.\n- Experience with firewalls, antivirus software, and intrusion detection systems.\n- Knowledge of risk assessment tools, technologies, and methods.\n- Understanding of cybersecurity frameworks (e.g., NIST, ISO 27001).\n- Strong analytical and problem-solving skills.`,
+                  "Data Scientist": `We are looking for a Data Scientist to analyze large amounts of raw information to find patterns that will help improve our company. We will rely on you to build data products to extract valuable business insights.\n\nResponsibilities:\n- Identify valuable data sources and automate collection processes.\n- Undertake preprocessing of structured and unstructured data.\n- Analyze large amounts of information to discover trends and patterns.\n- Build predictive models and machine-learning algorithms.\n- Combine models through ensemble modeling.\n- Present information using data visualization techniques.\n- Propose solutions and strategies to business challenges.\n\nRequirements:\n- Proven experience as a Data Scientist or Data Analyst.\n- Experience in data mining.\n- Understanding of machine-learning and operations research.\n- Knowledge of R, SQL and Python; familiarity with Scala, Java or C++ is an asset.\n- Experience using business intelligence tools (e.g. Tableau) and data frameworks (e.g. Hadoop).`,
+                  "Database Administrator (DBA)": `We are looking for a skilled Database Administrator (DBA) who will be responsible for the performance, integrity, and security of our databases. You will also be involved in the planning and development of the database, as well as troubleshooting any issues on behalf of the users.\n\nResponsibilities:\n- Manage database security, integrity, and backup procedures.\n- Write database documentation, including data standards, procedures, and definitions for the data dictionary (metadata).\n- Control access permissions and privileges.\n- Develop, manage, and test back-up and recovery plans.\n- Ensure that storage and archiving procedures are functioning correctly.\n- Carry out capacity planning.\n- Work closely with IT project managers, database programmers, and multimedia programmers.\n\nRequirements:\n- Proven working experience as a Database Administrator.\n- Hands-on experience with database standards and end-user applications.\n- Excellent knowledge of data backup, recovery, security, integrity, and SQL.\n- Familiarity with database design, documentation, and coding.\n- Experience with DBA case tools (frontend/backend) and third-party tools.`,
+                  "DevOps Engineer": `We are looking for a DevOps Engineer to help us build functional systems that improve customer experience. DevOps Engineer responsibilities include deploying product updates, identifying production issues and implementing integrations that meet customer needs.\n\nResponsibilities:\n- Build and set up new development tools and infrastructure.\n- Understand the needs of stakeholders and convey this to developers.\n- Work on ways to automate and improve development and release processes.\n- Test and examine code written by others and analyze results.\n- Ensure that systems are safe and secure against cybersecurity threats.\n- Identify technical problems and develop software updates and ‘fixes’.\n- Work with software developers and software engineers to ensure that development follows established processes and works as intended.\n\nRequirements:\n- Proven experience as a DevOps Engineer or similar software engineering role.\n- Proficient with git and git workflows.\n- Good knowledge of Ruby or Python.\n- Working knowledge of databases and SQL.\n- Problem-solving attitude.`,
+                  "Digital Marketing Specialist": `We are looking for a Digital Marketing Specialist to assist in the planning, execution, and optimization of our online marketing efforts. The ideal candidate will have a passion for all things marketing and technology.\n\nResponsibilities:\n- Assist in the formulation of strategies to build a lasting digital connection with consumers.\n- Plan and monitor the ongoing company presence on social media (Twitter, Facebook etc.).\n- Launch optimized online adverts through Google AdWords, Facebook etc. to increase company and brand awareness.\n- Be actively involved in SEO efforts (keyword, image optimization etc.).\n- Prepare online newsletters and promotional emails and organize their distribution through various channels.\n- Provide creative ideas for content marketing and update website.\n\nRequirements:\n- Proven experience as a Digital Marketing Specialist or similar role.\n- Excellent understanding of digital marketing concepts and best practices.\n- Experience with B2C social media, Google AdWords and email campaigns, and SEO/SEM.\n- Working knowledge of ad serving tools (e.g., DART, Atlas).\n- Perfect knowledge of web analytics tools (e.g., Google Analytics, NetInsight, WebTrends etc.).`,
+                  "Financial Analyst": `We are looking for a Financial Analyst to provide accurate and data-based information on company’s profitability, solvency, stability and liquidity. You will research and analyze financial information to help the company make well-informed decisions, write reports and monitor financial movements.\n\nResponsibilities:\n- Consolidate and analyze financial data (budgets, income statement forecasts etc) taking into account company’s goals and financial standing.\n- Provide creative alternatives and recommendations to reduce costs and improve financial performance.\n- Assemble and summarize data to structure sophisticated reports on financial status and risks.\n- Develop financial models, conduct benchmarking and process analysis.\n- Conduct business studies on past, future and comparative performance and develop forecast models.\n\nRequirements:\n- Proven working experience as a Financial Analyst.\n- Proficient in spreadsheets, databases, MS Office and financial software applications.\n- Hands on experience with statistical analysis and statistical packages.\n- Outstanding presentation, reporting and communication skills.\n- BS degree in Finance, Economics or related field.`,
+                  "Frontend Developer": `We are looking for a skilled Frontend Developer to join our team. The ideal candidate will be responsible for building the client-side of our web applications. You should be able to translate our company and customer needs into functional and appealing interactive applications.\n\nResponsibilities:\n- Use markup languages like HTML to create user-friendly web pages.\n- Maintain and improve website.\n- Optimize applications for maximum speed.\n- Design mobile-based features.\n- Collaborate with back-end developers and web designers to improve usability.\n- Get feedback from, and build solutions for, users and customers.\n- Write functional requirement documents and guides.\n- Create quality mockups and prototypes.\n- Help back-end developers with coding and troubleshooting.\n- Ensure high quality graphic standards and brand consistency.\n- Stay up-to-date on emerging technologies.\n\nRequirements:\n- Proven work experience as a Frontend Developer.\n- Proficient understanding of web markup, including HTML5, CSS3.\n- Basic understanding of server-side CSS pre-processing platforms, such as LESS and SASS.\n- Proficient understanding of client-side scripting and JavaScript frameworks, including React, Angular, or Vue.js.\n- Good understanding of asynchronous request handling, partial page updates, and AJAX.`,
+                  "Full-Stack Developer": `We are looking for a Full-Stack Developer to produce scalable software solutions. You’ll be part of a cross-functional team that’s responsible for the full software development life cycle, from conception to deployment. As a Full-Stack Developer, you should be comfortable around both front-end and back-end coding languages, development frameworks and third-party libraries.\n\nResponsibilities:\n- Work with development teams and product managers to ideate software solutions.\n- Design client-side and server-side architecture.\n- Build the front-end of applications through appealing visual design.\n- Develop and manage well-functioning databases and applications.\n- Write effective APIs.\n- Test software to ensure responsiveness and efficiency.\n- Troubleshoot, debug and upgrade software.\n- Create security and data protection settings.\n\nRequirements:\n- Proven experience as a Full-Stack Developer or similar role.\n- Experience developing desktop and mobile applications.\n- Familiarity with common stacks.\n- Knowledge of multiple front-end languages and libraries (e.g. HTML/ CSS, JavaScript, XML, jQuery).\n- Knowledge of multiple back-end languages (e.g. C#, Java, Python) and JavaScript frameworks (e.g. Angular, React, Node.js).\n- Familiarity with databases (e.g. MySQL, MongoDB), web servers (e.g. Apache) and UI/UX design.`,
+                  "Graphic Designer": `We are looking for a creative Graphic Designer with up-to-date knowledge to interpret our clients’ needs and to design solutions with high visual impact. You will work on a variety of products, including websites, books, magazines, product packaging, websites, exhibitions, corporate identity etc.\n\nResponsibilities:\n- Cultivate a solid body of work.\n- Take the design “brief” to record requirements and clients’ needs.\n- Schedule project implementation and define budget constraints.\n- Work with a wide range of media and use graphic design software.\n- Think creatively and develop new design concepts, graphics and layouts.\n- Prepare rough drafts and present your ideas.\n- Amend final designs to clients’ comments and gain full approval.\n\nRequirements:\n- Proven graphic designing experience.\n- A strong portfolio of illustrations or other graphics.\n- Familiarity with design software and technologies (such as InDesign, Illustrator, Dreamweaver, Photoshop).\n- A keen eye for aesthetics and details.\n- Excellent communication skills.`,
+                  "Human Resources (HR) Manager": `We are looking for an HR Manager to oversee all aspects of human resources practices and processes. You will support business needs and ensure the proper implementation of company strategy and objectives.\n\nResponsibilities:\n- Develop and implement HR strategies and initiatives aligned with the overall business strategy.\n- Bridge management and employee relations by addressing demands, grievances or other issues.\n- Manage the recruitment and selection process.\n- Support current and future business needs through the development, engagement, motivation and preservation of human capital.\n- Develop and monitor overall HR strategies, systems, tactics and procedures across the organization.\n- Nurture a positive working environment.\n\nRequirements:\n- Proven working experience as an HR Manager or other HR Executive.\n- People-oriented and results-driven.\n- Demonstrable experience with human resources metrics.\n- Knowledge of HR systems and databases.\n- Ability to architect strategy along with leadership skills.`,
+                  "IT Support Specialist": `We are seeking an IT Support Specialist to provide technical assistance and support to our employees. You will be the first point of contact for any technical issues, and you'll work to resolve them in a timely and efficient manner.\n\nResponsibilities:\n- Provide first-level contact and convey resolutions to customer issues.\n- Properly escalate unresolved queries to the next level of support.\n- Track, route, and redirect problems to correct resources.\n- Update customer data and produce activity reports.\n- Walk customers through the problem-solving process.\n- Install, modify, and repair computer hardware and software.\n\nRequirements:\n- Proven work experience as an IT Support Specialist or other technical support role.\n- Strong understanding of computer systems, mobile devices, and other tech products.\n- Ability to diagnose and resolve basic technical issues.\n- Excellent communication skills.\n- Customer-oriented and cool-tempered.`,
+                  "Marketing Manager": `We are looking for a Marketing Manager to be responsible for developing, implementing and executing strategic marketing plans for an entire organization (or lines of business and brands within an organization) in order to attract potential customers and retain existing ones.\n\nResponsibilities:\n- Developing strategies and tactics to get the word out about our company and drive qualified traffic to our front door.\n- Deploying successful marketing campaigns and own their implementation from ideation to execution.\n- Experimenting with a variety of organic and paid acquisition channels like content creation, content curation, pay per click campaigns, event management, publicity, social media, lead generation campaigns, copywriting, performance analysis.\n- Producing valuable and engaging content for our website and blog that attracts and converts our target groups.\n\nRequirements:\n- Demonstrable experience in marketing together with the potential and attitude required to learn.\n- Proven experience in identifying target audiences and in creatively devising and leading across channels marketing campaigns that engage, educate and motivate.\n- Solid knowledge of website analytics tools (e.g., Google Analytics, NetInsight, Omniture, WebTrends).\n- Numerically literate, comfortable working with numbers, making sense of metrics and processing figures with spreadsheets.`,
+                  "Mobile App Developer (iOS/Android)": `Seeking a Mobile App Developer to design, develop, and maintain applications for mobile devices. You will be responsible for the full mobile application development lifecycle.\n\nResponsibilities:\n- Design and build advanced applications for the iOS and/or Android platform.\n- Collaborate with cross-functional teams to define, design, and ship new features.\n- Unit-test code for robustness, including edge cases, usability, and general reliability.\n- Work on bug fixing and improving application performance.\n- Continuously discover, evaluate, and implement new technologies to maximize development efficiency.\n\nRequirements:\n- BS/MS degree in Computer Science, Engineering or a related subject.\n- Proven software development experience and Android/iOS skills development.\n- Proven working experience in Android/iOS app development.\n- Experience with third-party libraries and APIs.\n- Working knowledge of the general mobile landscape, architectures, trends, and emerging technologies.`,
+                  "Network Engineer": `We are looking for a Network Engineer to design, implement, maintain, and support our growing network infrastructure. You will be part of a systems engineering team that is responsible for designing and developing scalable, maintainable, highly available network architectures that meet business objectives and SLAs.\n\nResponsibilities:\n- Configure and install various network devices and services (e.g., routers, switches, firewalls, load balancers, VPN, QoS).\n- Perform network maintenance and system upgrades including service packs, patches, hot fixes, and security configurations.\n- Monitor performance and ensure system availability and reliability.\n- Monitor system resource utilization, trending, and capacity planning.\n- Provide Level-2/3 support and troubleshooting to resolve issues.\n\nRequirements:\n- Proven hands-on network engineering experience.\n- CCNP or higher (CCIE and/or CISSP highly valued).\n- Deep understanding of networking protocols (e.g., IPSEC, HSRP, BGP, OSPF, 802.11, QoS).\n- Solid understanding of the OSI or TCP/IP model.\n- Hands-on experience with monitoring, network diagnostic, and network analytics tools.`,
+                  "Product Manager": `We are looking for an experienced Product Manager to be responsible for setting the strategy, roadmap, and feature definition for a product or product line. You will guide the success of a product and lead the cross-functional team that is responsible for improving it.\n\nResponsibilities:\n- Defines the product vision, strategy and roadmap.\n- Gathers, manages, and prioritizes market/customer requirements.\n- Acts as the customer advocate articulating the user’s and/or buyer’s needs.\n- Works closely with engineering, sales, marketing, and support to ensure business case and customer satisfaction goals are met.\n- Has technical product knowledge or specific domain expertise.\n- Defines what the product team will deliver and the timeline for implementation.\n\nRequirements:\n- Proven experience as a Product Manager or similar role.\n- Experience in product lifecycle management.\n- Background in software development and program management is preferred.\n- Familiarity with Agile framework.\n- Organizational and leadership abilities.`,
+                  "Project Manager": `We are looking for an experienced Project Manager to manage organization of key client projects. Project Manager responsibilities include the coordination and completion of projects on time within budget and within scope. Oversee all aspects of projects. Set deadlines, assign responsibilities and monitor and summarize progress of project.\n\nResponsibilities:\n- Coordinate internal resources and third parties/vendors for the flawless execution of projects.\n- Ensure that all projects are delivered on-time, within scope and within budget.\n- Developing project scopes and objectives, involving all relevant stakeholders and ensuring technical feasibility.\n- Ensure resource availability and allocation.\n- Develop a detailed project plan to track progress.\n\nRequirements:\n- Proven working experience as a project administrator in the information technology sector.\n- Solid technical background, with understanding or hands-on experience in software development and web technologies.\n- Excellent client-facing and internal communication skills.\n- Excellent written and verbal communication skills.\n- Solid organizational skills including attention to detail and multi-tasking skills.`,
+                  "Software Engineer in Test (SDET)": `We are looking for a Software Development Engineer in Test (SDET) to join our team. You will be responsible for developing and executing automated tests to ensure product quality. As an SDET, you should have a solid background in software development, a deep understanding of testing methodologies, and a passion for quality.\n\nResponsibilities:\n- Design, develop, and execute automation scripts using open-source tools.\n- Identify, record, document thoroughly, and track bugs.\n- Perform thorough regression testing when bugs are resolved.\n- Develop and apply testing processes for new and existing products to meet client needs.\n- Liaise with internal teams (e.g., developers and product managers) to identify system requirements.\n- Monitor debugging process results.\n- Investigate the causes of non-conforming software and train users to implement solutions.\n- Track quality assurance metrics, like defect densities and open defect counts.\n\nRequirements:\n- Proven work experience in software development.\n- Proven work experience in software quality assurance.\n- Strong knowledge of software QA methodologies, tools, and processes.\n- Experience in writing clear, concise, and comprehensive test plans and test cases.\n- Hands-on experience with both white box and black box testing.\n- Hands-on experience with automated testing tools (e.g., Selenium, Cypress).\n- Solid knowledge of SQL and scripting.\n- Experience working in an Agile/Scrum development process.`,
+                  "Systems Administrator": `We are looking for a System Administrator to maintain, upgrade and manage our software, hardware and networks. Resourcefulness is a necessary skill in this role. You should be able to diagnose and resolve problems quickly. You should also have the patience to communicate with a variety of interdisciplinary teams and users.\n\nResponsibilities:\n- Install and configure software and hardware.\n- Manage network servers and technology tools.\n- Set up accounts and workstations.\n- Monitor performance and maintain systems according to requirements.\n- Troubleshoot issues and outages.\n- Ensure security through access controls, backups and firewalls.\n- Upgrade systems with new releases and models.\n- Develop expertise to train staff on new technologies.\n- Build an internal wiki with technical documentation, manuals and IT policies.\n\nRequirements:\n- Proven experience as a System Administrator, Network Administrator or similar role.\n- Experience with databases, networks (LAN, WAN) and patch management.\n- Knowledge of system security (e.g. intrusion detection systems) and data backup/recovery.\n- Familiarity with various operating systems and platforms (e.g., Windows, Linux, macOS).\n- Resourcefulness and problem-solving aptitude.`,
+                  "UX/UI Designer": `We are looking for a talented UX/UI Designer to create amazing user experiences. The ideal candidate should have an eye for clean and artful design, possess superior UI skills and be able to translate high-level requirements into interaction flows and artifacts, and transform them into beautiful, intuitive, and functional user interfaces.\n\nResponsibilities:\n- Collaborate with product management and engineering to define and implement innovative solutions for the product direction, visuals and experience.\n- Execute all visual design stages from concept to final hand-off to engineering.\n- Conceptualize original ideas that bring simplicity and user friendliness to complex design roadblocks.\n- Create wireframes, storyboards, user flows, process flows and site maps to effectively communicate interaction and design ideas.\n- Present and defend designs and key milestone deliverables to peers and executive level stakeholders.\n\nRequirements:\n- Proven UI experience.\n- Demonstrable UI design skills with a strong portfolio.\n- Solid experience in creating wireframes, storyboards, user flows, process flows and site maps.\n- Proficiency in Photoshop, Illustrator, OmniGraffle, or other visual design and wire-framing tools.\n- Proficiency in HTML, CSS, and JavaScript for rapid prototyping.`
+              };
+              return fullDescriptions[role.title] || match;
+          })
+      }));
+
 
       // --- SERVICES: geminiService.js (Standalone Version) ---
       const candidateSchema = {
@@ -602,7 +655,160 @@
         </button>
       );
       
-      const ResumeBuilder = () => { /* ... Full component logic ... */ return (<div>Resume Builder</div>); };
+      const ResumeBuilder = () => {
+        const initialFormData = {
+          fullName: '', email: '', phoneNumber: '', address: '', summary: '',
+          workExperience: [{ id: `exp_${Date.now()}`, company: '', jobTitle: '', startDate: '', endDate: '', responsibilities: '' }],
+          education: [{ id: `edu_${Date.now()}`, school: '', degree: '', startDate: '', endDate: '' }],
+          skills: '',
+        };
+
+        const [formData, setFormData] = useState(initialFormData);
+        const [generatedResume, setGeneratedResume] = useState(null);
+        const [isLoading, setIsLoading] = useState(false);
+        const [error, setError] = useState(null);
+        const [isCopied, setIsCopied] = useState(false);
+
+        const handleInputChange = (e) => {
+          const { name, value } = e.target;
+          setFormData(prev => ({ ...prev, [name]: value }));
+        };
+
+        const handleNestedChange = (section, id, e) => {
+          const { name, value } = e.target;
+          setFormData(prev => ({
+            ...prev,
+            [section]: prev[section].map(item =>
+              item.id === id ? { ...item, [name]: value } : item
+            ),
+          }));
+        };
+        
+        const addEntry = (section) => {
+          const newEntry = section === 'workExperience'
+            ? { id: `exp_${Date.now()}`, company: '', jobTitle: '', startDate: '', endDate: '', responsibilities: '' }
+            : { id: `edu_${Date.now()}`, school: '', degree: '', startDate: '', endDate: '' };
+          setFormData(prev => ({ ...prev, [section]: [...prev[section], newEntry] }));
+        };
+
+        const removeEntry = (section, id) => {
+          setFormData(prev => ({ ...prev, [section]: prev[section].filter(item => item.id !== id) }));
+        };
+
+        const handleGenerateResume = async () => {
+          setIsLoading(true);
+          setError(null);
+          setGeneratedResume(null);
+          try {
+            const result = await generateResumeFromDetails(formData);
+            setGeneratedResume(result);
+          } catch (err) {
+            setError(err.message || 'An error occurred while generating the resume.');
+          } finally {
+            setIsLoading(false);
+          }
+        };
+        
+        const handleCopyToClipboard = () => {
+          if (!generatedResume) return;
+          navigator.clipboard.writeText(generatedResume).then(() => {
+            setIsCopied(true);
+            setTimeout(() => setIsCopied(false), 2000);
+          });
+        };
+
+        const FormSection = ({ title, children }) => (
+          <div className="bg-slate-900/50 backdrop-blur-md border border-slate-700 p-6 rounded-lg">
+            <h3 className="text-xl font-bold mb-4 text-cyan-400">{title}</h3>
+            {children}
+          </div>
+        );
+        
+        const InputField = ({ name, label, value, onChange, placeholder, isTextArea = false }) => (
+          <div>
+            <label htmlFor={name} className="block text-sm font-medium text-slate-300 mb-1">{label}</label>
+            {isTextArea ? (
+              <textarea id={name} name={name} value={value} onChange={onChange} placeholder={placeholder} rows={4} className="w-full p-2 bg-slate-800/70 text-slate-200 border border-slate-600 rounded-md focus:ring-2 focus:ring-pink-500 transition-colors" />
+            ) : (
+              <input type="text" id={name} name={name} value={value} onChange={onChange} placeholder={placeholder} className="w-full p-2 bg-slate-800/70 text-slate-200 border border-slate-600 rounded-md focus:ring-2 focus:ring-pink-500 transition-colors" />
+            )}
+          </div>
+        );
+
+        return (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="flex flex-col gap-6">
+              <FormSection title="Personal Details">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <InputField name="fullName" label="Full Name" value={formData.fullName} onChange={handleInputChange} />
+                  <InputField name="email" label="Email" value={formData.email} onChange={handleInputChange} />
+                  <InputField name="phoneNumber" label="Phone Number" value={formData.phoneNumber} onChange={handleInputChange} />
+                  <InputField name="address" label="Address" value={formData.address} onChange={handleInputChange} />
+                </div>
+              </FormSection>
+              <FormSection title="Professional Summary">
+                  <InputField name="summary" label="Summary" value={formData.summary} onChange={handleInputChange} placeholder="A brief summary of your career..." isTextArea />
+              </FormSection>
+              <FormSection title="Work Experience">
+                {formData.workExperience.map((exp, index) => (
+                  <div key={exp.id} className="grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-slate-700 pb-4 mb-4">
+                    <InputField name="jobTitle" label="Job Title" value={exp.jobTitle} onChange={(e) => handleNestedChange('workExperience', exp.id, e)} />
+                    <InputField name="company" label="Company" value={exp.company} onChange={(e) => handleNestedChange('workExperience', exp.id, e)} />
+                    <InputField name="startDate" label="Start Date" value={exp.startDate} onChange={(e) => handleNestedChange('workExperience', exp.id, e)} />
+                    <div className="relative">
+                      <InputField name="endDate" label="End Date" value={exp.endDate} onChange={(e) => handleNestedChange('workExperience', exp.id, e)} />
+                      {formData.workExperience.length > 1 && <button onClick={() => removeEntry('workExperience', exp.id)} className="absolute top-0 right-0 text-red-400 hover:text-red-300"><TrashIcon className="w-5 h-5"/></button>}
+                    </div>
+                    <div className="md:col-span-2">
+                      <InputField name="responsibilities" label="Responsibilities" value={exp.responsibilities} onChange={(e) => handleNestedChange('workExperience', exp.id, e)} isTextArea placeholder="Describe your key achievements..."/>
+                    </div>
+                  </div>
+                ))}
+                <button onClick={() => addEntry('workExperience')} className="flex items-center gap-2 text-cyan-400 font-semibold"><PlusIcon className="w-5 h-5"/> Add Experience</button>
+              </FormSection>
+              <FormSection title="Education">
+                {formData.education.map((edu) => (
+                  <div key={edu.id} className="grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-slate-700 pb-4 mb-4">
+                    <InputField name="school" label="School / University" value={edu.school} onChange={(e) => handleNestedChange('education', edu.id, e)} />
+                    <InputField name="degree" label="Degree / Field of Study" value={edu.degree} onChange={(e) => handleNestedChange('education', edu.id, e)} />
+                    <InputField name="startDate" label="Start Date" value={edu.startDate} onChange={(e) => handleNestedChange('education', edu.id, e)} />
+                    <div className="relative">
+                      <InputField name="endDate" label="End Date" value={edu.endDate} onChange={(e) => handleNestedChange('education', edu.id, e)} />
+                      {formData.education.length > 1 && <button onClick={() => removeEntry('education', edu.id)} className="absolute top-0 right-0 text-red-400 hover:text-red-300"><TrashIcon className="w-5 h-5"/></button>}
+                    </div>
+                  </div>
+                ))}
+                <button onClick={() => addEntry('education')} className="flex items-center gap-2 text-cyan-400 font-semibold"><PlusIcon className="w-5 h-5"/> Add Education</button>
+              </FormSection>
+              <FormSection title="Skills">
+                  <InputField name="skills" label="Skills" value={formData.skills} onChange={handleInputChange} placeholder="e.g., JavaScript, React, Node.js, Project Management" isTextArea />
+              </FormSection>
+            </div>
+            <div className="flex flex-col gap-6">
+              <div className="bg-slate-900/50 backdrop-blur-md border border-slate-700 p-6 rounded-lg flex-grow flex flex-col">
+                  <h2 className="text-2xl font-bold mb-4 text-slate-200">Generated Resume</h2>
+                  <div className="flex-grow relative bg-slate-800/50 rounded-md p-4 min-h-[300px]">
+                      {isLoading && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm rounded-lg z-10">
+                            <div className="text-center">
+                                <LoadingSpinner />
+                                <p className="mt-2 text-lg font-semibold text-cyan-400">AI is writing your resume...</p>
+                            </div>
+                        </div>
+                      )}
+                      {error && <ErrorDisplay message={error} />}
+                      {!isLoading && !error && generatedResume && <pre className="text-sm text-slate-200 whitespace-pre-wrap font-sans">{generatedResume}</pre>}
+                      {!isLoading && !error && !generatedResume && <div className="flex items-center justify-center h-full text-center text-slate-400"><p>Your generated resume will appear here.</p></div>}
+                  </div>
+                  {generatedResume && <button onClick={handleCopyToClipboard} className="mt-4 w-full bg-pink-600 text-white font-bold py-2 px-4 rounded-lg shadow-glow shadow-pink-600/50 hover:shadow-glow-lg hover:shadow-pink-600/50 transition-all duration-300 flex items-center justify-center gap-2"><ClipboardIcon className="w-5 h-5" />{isCopied ? 'Copied!' : 'Copy to Clipboard'}</button>}
+              </div>
+              <button onClick={handleGenerateResume} disabled={isLoading} className="w-full bg-cyan-500 text-white font-bold py-3 px-4 rounded-lg shadow-glow shadow-cyan-500/50 hover:shadow-glow-lg hover:shadow-cyan-500/50 disabled:bg-slate-600 disabled:shadow-none disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2">
+                {isLoading ? (<><LoadingSpinner /> Generating...</>) : (<><SparklesIcon className="w-5 h-5" /> Generate Resume with AI</>)}
+              </button>
+            </div>
+          </div>
+        );
+      };
 
 
       // --- MAIN APP COMPONENT ---
@@ -735,7 +941,7 @@
                             </main>
                         </div>
                     )}
-                    {activeView === 'builder' && <p>Resume builder coming soon in standalone mode!</p> /* Simplified for brevity */}
+                    {activeView === 'builder' && <ResumeBuilder />}
                 </div>
                 {activeView === 'screener' && <AiConsultantButton onClick={() => setIsConsultantModalOpen(true)} />}
                 <AiConsultantModal isOpen={isConsultantModalOpen} onClose={() => setIsConsultantModalOpen(false)} messages={consultantMessages} onAsk={handleAskConsultant} isLoading={isConsultantLoading} error={consultantError} />
