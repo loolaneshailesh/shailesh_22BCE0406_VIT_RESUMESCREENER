@@ -1,4 +1,3 @@
-
 import type { Candidate, Resume, ConsultantMessage, ResumeBuilderData } from "../types";
 
 /**
@@ -33,8 +32,7 @@ const callApiProxy = async (body: object, stream: boolean = false): Promise<any>
       if (specificMessage) {
         // Check for common, actionable errors
         if (specificMessage.includes('API key not valid')) {
-          // Fix: Updated error message to not instruct user to modify .env file, per guidelines.
-          errorMessage = 'Your API key is not valid.';
+          errorMessage = 'Your API key is not valid. Please check your .env file and ensure it is correct.';
         } else if (specificMessage.includes('permission to access') || specificMessage.includes('billing')) {
           errorMessage = 'The API key is likely correct, but there is a permission or billing issue with your Google Cloud project. Please ensure the Generative Language API is enabled and billing is active.';
         } else {
@@ -80,7 +78,23 @@ const callApiProxy = async (body: object, stream: boolean = false): Promise<any>
   }
 };
 
-// Fix: Removed verifyApiKey function as per guidelines to not have UI for API key management.
+/**
+ * Verifies the API key by making a simple, non-streaming request to the Gemini API.
+ * This is used for a startup check to provide immediate user feedback.
+ * Throws an error if the key is invalid or the connection fails.
+ */
+export const verifyApiKey = async (): Promise<void> => {
+  try {
+    // We use a simple, low-cost prompt just to test connectivity.
+    // We don't care about the response, only that the request doesn't fail.
+    await callApiProxy({
+      contents: [{ parts: [{ text: "hello" }] }],
+    }, false); // stream = false
+  } catch (error) {
+    // Re-throw the detailed error from callApiProxy to be displayed in the UI
+    throw error;
+  }
+};
 
 // Defines the strict JSON schema for the resume analysis output.
 // This ensures the Gemini API returns data in a consistent and reliable format.

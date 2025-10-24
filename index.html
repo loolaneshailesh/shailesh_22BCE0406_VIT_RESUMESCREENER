@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,8 +17,8 @@
               'space-primary': '#0e7490', // Deep Cyan
               'space-secondary': '#be185d', // Deep Pink/Magenta
               'space-accent': '#6d28d9', // Deep Violet
-              'brand-primary': '#0891b2', // Kept for compatibility, but updated
-              'brand-secondary': '#db2777', // Kept for compatibility, but updated
+              'brand-primary': '#0891b2',
+              'brand-secondary': '#db2777',
             },
             fontFamily: {
               sans: ['"Exo 2"', 'sans-serif'],
@@ -56,18 +56,19 @@
 <script type="importmap">
 {
   "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "pdfjs-dist": "https://aistudiocdn.com/pdfjs-dist@^5.4.296",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
     "vite": "https://aistudiocdn.com/vite@^7.1.12",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "process": "https://aistudiocdn.com/process@^0.11.10",
+    "pdfjs-dist": "https://aistudiocdn.com/pdfjs-dist@^5.4.296",
     "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.0.4"
   }
 }
 </script>
 </head>
-  <body class="bg-slate-900">
+<body class="bg-slate-900">
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+    <script type="module" src="/src/index.tsx"></script>
+</body>
 </html>

@@ -20,24 +20,26 @@ An intelligent tool to parse resumes, extract key information, and score candida
 
 ---
 
-## 🚀 How to Run This Project Locally
+## 🚀 Two Ways to Run This Project Locally
 
-This project is set up to run locally using **Vite**, a modern frontend build tool. Follow these simple steps to get the application running on your machine.
+There are two ways to run this application on your machine. The **Vite Method** is recommended for development, while the **Standalone File Method** is a quick and easy way to preview the app without any setup.
 
-### Step 1: Create the Environment File
+### Method 1: For Developers (Recommended)
 
+This project is set up to run locally using **Vite**, a modern frontend build tool. This is the most secure and feature-rich way to run the application.
+
+#### Step 1: Create the Environment File
 This file securely stores your secret API key.
 
 1.  In the root directory of the project, create a new file named **`.env`**.
-2.  Open the `.env` file and add your Google Gemini API key in the following format. You can get a free key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+2.  Open the `.env` file and add your Google Gemini API key. You can get a free key from [Google AI Studio](https://aistudio.google.com/app/apikey).
 
     ```
     VITE_API_KEY=your_gemini_api_key_goes_here
     ```
     **Important:** The variable name **must** start with `VITE_` for the application to be able to access it.
 
-### Step 2: Install Dependencies
-
+#### Step 2: Install Dependencies
 This command will download all the necessary libraries (like React) that the project needs to run.
 
 1.  Open your terminal in the project's root folder.
@@ -46,8 +48,7 @@ This command will download all the necessary libraries (like React) that the pro
     npm install
     ```
 
-### Step 3: Start the Development Server
-
+#### Step 3: Start the Development Server
 This command will launch the application.
 
 1.  In the same terminal, run:
@@ -55,6 +56,21 @@ This command will launch the application.
     npm run dev
     ```
 2.  Your terminal will display a local URL, usually **`http://localhost:5173`**. Open this URL in your web browser to see the application live!
+
+---
+
+### Method 2: Standalone File (Quick & Easy Preview)
+
+If you want to try the app without installing Node.js or running any commands, you can use the self-contained HTML file.
+
+#### Step 1: Open the File
+Simply open the `run_local_no_server.html` file in a modern web browser like Chrome or Firefox.
+
+#### Step 2: Provide Your API Key
+The application will prompt you to enter your Google Gemini API key. Paste your key into the input field to start using the app.
+
+*   **Convenience:** The key will be saved in your browser's local storage, so you won't need to enter it again on the same machine.
+*   **Security Note:** This method is provided for convenience. It is less secure because your API key is stored and handled directly in the browser. For the most secure setup, please use the Vite method described above.
 
 ---
 
@@ -94,55 +110,16 @@ This file is the brain of the AI integration, orchestrating all calls to the Gem
 
 ## troubleshooting
 
+If you encounter issues with the **Vite method**, please check the following:
+
 ### API Key Connection Failed
 
-If you see a red banner at the top of the application indicating an API key failure, this is the most common setup issue. The banner will show you a masked version of the key it's trying to use (e.g., `VITE...W8I`).
-
--   **If the masked key appears correctly:** This means your `.env` file is being read! The problem is with the key itself or your Google Cloud Project.
-    1.  **Create a New Key:** The fastest solution is to go to [Google AI Studio](https://aistudio.google.com/app/apikey), delete your current key, and **create a brand new one**.
-    2.  **Enable the API:** Make sure the **"Generative Language API"** is enabled in your Google Cloud Project. You can do so here: [Enable the API](https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com).
-    3.  **Check Billing:** For full model access, a billing account must be linked to your Google Cloud Project.
-    4.  **Restart the Server:** After pasting the new key into your `.env` file, you **must** stop (`Ctrl+C`) and restart (`npm run dev`) your Vite server.
-
--   **If the banner says "VITE_API_KEY not found":** This means there is a problem with your `.env` file itself.
+-   **Check the `.env` file:**
     1.  Ensure the file is in the **root** of your project.
     2.  Ensure it is named exactly `.env`.
     3.  Ensure the variable inside is named `VITE_API_KEY`.
-
----
-
-## 🛠️ Detailed Local Setup Guide
-
-If you are setting up the project for the first time, you may need to install some prerequisite tools.
-
-### Prerequisites
-
-1.  **Node.js:** This is the runtime environment for JavaScript. Installing it will also install `npm`, the package manager. You can download it from the official [Node.js website](https://nodejs.org/). We recommend the LTS (Long-Term Support) version.
-2.  **A Code Editor:** We recommend using [Visual Studio Code](https://code.visualstudio.com/), which is free and has excellent support for web development.
-3.  **A Terminal/Command Line:**
-    *   **Windows:** You can use PowerShell or the built-in Command Prompt.
-    *   **macOS/Linux:** You can use the built-in Terminal.
-
-### Step-by-Step Instructions
-
-1.  **Download or Clone the Project:** Get all the project files onto your computer.
-
-2.  **Open the Project in Your Code Editor:** Launch VS Code (or your editor of choice) and open the project folder.
-
-3.  **Create the `.env` File:**
-    *   In your editor's file explorer, create a new file in the root directory and name it `.env`.
-    *   Add the line `VITE_API_KEY=your_gemini_api_key_goes_here`, replacing the placeholder with your actual key.
-    *   **Tip for Terminal Users:**
-        *   Navigate to the project folder in your terminal.
-        *   On Windows (PowerShell), run: `echo "VITE_API_KEY=your_key_here" > .env`
-        *   On macOS/Linux, run: `echo "VITE_API_KEY=your_key_here" > .env`
-        *   Then, open the file in a text editor to paste your actual key.
-
-4.  **Install Dependencies:**
-    *   Open a terminal directly within your code editor (in VS Code, go to `Terminal` -> `New Terminal`).
-    *   Run the command: `npm install`
-    *   This will create a `node_modules` folder in your project, which contains all the required packages.
-
-5.  **Run the Application:**
-    *   In the same terminal, run the command: `npm run dev`
-    *   The server will start, and you can now access the application in your browser at the provided `localhost` address.
+-   **Check the Key and Project Settings:**
+    1.  The issue might be with the key itself or your Google Cloud Project. Go to [Google AI Studio](https://aistudio.google.com/app/apikey), delete your current key, and **create a brand new one**.
+    2.  Make sure the **"Generative Language API"** is enabled in your Google Cloud Project: [Enable the API](https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com).
+    3.  For full model access, a billing account must be linked to your Google Cloud Project.
+-   **Restart the Server:** After pasting a new key into your `.env` file, you **must** stop (`Ctrl+C`) and restart (`npm run dev`) your Vite server.
