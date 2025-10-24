@@ -20,6 +20,26 @@ const initialFormData: ResumeBuilderData = {
   skills: '',
 };
 
+// Moved FormSection outside of ResumeBuilder to prevent re-rendering on every keystroke
+const FormSection: React.FC<{ title: string, children: React.ReactNode }> = ({ title, children }) => (
+  <div className="bg-slate-900/50 backdrop-blur-md border border-slate-700 p-6 rounded-lg">
+    <h3 className="text-xl font-bold mb-4 text-cyan-400">{title}</h3>
+    {children}
+  </div>
+);
+
+// Moved InputField outside of ResumeBuilder to prevent re-rendering on every keystroke
+const InputField: React.FC<{ name: string, label: string, value: string, onChange: any, placeholder?: string, isTextArea?: boolean }> = ({ name, label, value, onChange, placeholder, isTextArea = false }) => (
+  <div>
+    <label htmlFor={name} className="block text-sm font-medium text-slate-300 mb-1">{label}</label>
+    {isTextArea ? (
+      <textarea id={name} name={name} value={value} onChange={onChange} placeholder={placeholder} rows={4} className="w-full p-2 bg-slate-800/70 text-slate-200 border border-slate-600 rounded-md focus:ring-2 focus:ring-pink-500 transition-colors" />
+    ) : (
+      <input type="text" id={name} name={name} value={value} onChange={onChange} placeholder={placeholder} className="w-full p-2 bg-slate-800/70 text-slate-200 border border-slate-600 rounded-md focus:ring-2 focus:ring-pink-500 transition-colors" />
+    )}
+  </div>
+);
+
 const ResumeBuilder: React.FC = () => {
   const [formData, setFormData] = useState<ResumeBuilderData>(initialFormData);
   const [generatedResume, setGeneratedResume] = useState<string | null>(null);
@@ -78,24 +98,6 @@ const ResumeBuilder: React.FC = () => {
       setTimeout(() => setIsCopied(false), 2000);
     });
   };
-
-  const FormSection: React.FC<{ title: string, children: React.ReactNode }> = ({ title, children }) => (
-    <div className="bg-slate-900/50 backdrop-blur-md border border-slate-700 p-6 rounded-lg">
-      <h3 className="text-xl font-bold mb-4 text-cyan-400">{title}</h3>
-      {children}
-    </div>
-  );
-  
-  const InputField: React.FC<{ name: string, label: string, value: string, onChange: any, placeholder?: string, isTextArea?: boolean }> = ({ name, label, value, onChange, placeholder, isTextArea = false }) => (
-    <div>
-      <label htmlFor={name} className="block text-sm font-medium text-slate-300 mb-1">{label}</label>
-      {isTextArea ? (
-        <textarea id={name} name={name} value={value} onChange={onChange} placeholder={placeholder} rows={4} className="w-full p-2 bg-slate-800/70 text-slate-200 border border-slate-600 rounded-md focus:ring-2 focus:ring-pink-500 transition-colors" />
-      ) : (
-        <input type="text" id={name} name={name} value={value} onChange={onChange} placeholder={placeholder} className="w-full p-2 bg-slate-800/70 text-slate-200 border border-slate-600 rounded-md focus:ring-2 focus:ring-pink-500 transition-colors" />
-      )}
-    </div>
-  );
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
